@@ -14,7 +14,7 @@ Nowadays, the Agile became very famous among software development. Data science 
 
 Scrum as methodologies tries to help build a good software in small increments. There are lots of attempts to apply agile software methods to data science[^1][^2], but the results are mostly unsatisfactory.
 
-Based on my experiences and reading, I try to discuss:
+Based on my experiences, reading, and recent participating a SCRUM training with McGill University, I try to discuss:
 
 - why agile **scrum** framework is not a good fit for data science project
 - the agile **concept** following data science discipline
@@ -66,9 +66,11 @@ Data Science project is possible to inhere the Agile software development. We ne
 
 In general, we should keep in mind the concept of Agile (iterative, incremental and continuous), as due to uncertainty of research, we are unable to convert these directly into **time-constraint** sprint and **point-based** task.
 
-Thus, Scrum methodology should serve as project management framework that manages the data science project.
+But, the data preparation is the only exception due to uncertainty. Thus we should separate the data preparation part from the SCRUM sprint, especially we know that we are very dependant on other resources or the data is very dirty, and the preprocessing might involve the interaction outside of the team.
 
-- Sprint: a time-box of 2-4 weeks, when we should reorder, re-prioritize the future according to the newest discovery.
+Then, Scrum methodology should serve as project management framework that manages the data science project. In practice: 
+
+- Sprint: a time-box of flexible 2-4 weeks, when we should reorder, re-prioritize the future according to the newest discovery.
 - Sprint Planning: we assess the known discovery of data and make appropriate change on the sprint-level planning if needed (such as switching the methodology, adjusting the ETA of completion, changing scope, ...).
 - Daily Scrum (Stand-up): we should share knowledge of the team's newest discovery based on data and use the time to make quick adjustment on the short term task (such as switching data source, asking for domain knowledge expert, changing algorithms, ...).
 - Sprint Review: we should abandon the review during the project with team, except when we achieve a certain milestone. We use the review to present and synchronize with business/product but only at leadership level.
