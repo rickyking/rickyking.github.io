@@ -40,6 +40,8 @@ One trick to obtain the correct `Auth` and `PassXXXX` setting is to run: `sudo c
 
 Now we are ready to do restart `sudo service restart cntlm`
 
+<!--more-->
+
 ## Step 2: setup the proxy in system
 
 **Linux system**
