@@ -1,8 +1,8 @@
 ---
 layout: "post"
 title: "Data Science WSL Proxy Setup Behind Enterprise Environment"
-date: "2018-12-31 09:49"
-updated: "2018-01-16 22:49"
+date: "2020-03-11 09:49"
+updated: "2020-03-11 09:49"
 tags:
   - data science
   - wsl
