@@ -93,14 +93,7 @@ To get the certificate, we can obtain the certificate as follows on Windows in C
 
 In the new dialog box, go to Details tab and click Copy to File. Then export the certificate as a base 64 encoded file. Place this file in a sensible location.
 
-
-> Or use Brad's: 
->
-> Get certificate from `https://github.riotinto.org/bbtomo/certpack`
->
-> extract all certificats to `/usr/local/share/ca-certificates` then `sudo update-ca-certificates`
-
-For conda/pip set: where ca-bundle.crt is `RTNetworkSecurityTrust.crt`
+For conda/pip set:
 
 ```
 pip config set global.cert path/to/ca-bundle.crt
