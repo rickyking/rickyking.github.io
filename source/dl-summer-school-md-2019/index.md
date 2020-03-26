@@ -1,4 +1,6 @@
-# Deep Learning Summer School
+title: Deep Learning Summer School 2019 IVADO-MILA
+date: 2019-03-26 17:04:00
+---
 
 Course Github Repo: 
 
