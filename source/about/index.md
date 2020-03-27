@@ -1,8 +1,8 @@
 title: About Me
-date: 2015-04-09 22:48:39
+date: 2020-03-27 09:30:00
 ---
 
-I am currently working in Montreal, Canada as a senior data scientist at [ssense.com](). I am enjoying very much programming in [R](http://cran.r-project.org), [python for analytics](http://pandas.pydata.org) and [Apache Spark](http://spark.apache.org). Never stop looking into new technology like [docker](https://www.docker.com), [mesos](http://mesos.apache.org), [Elastic Search](https://www.elastic.co) and some fun stuff like [Raspberry Pi](https://www.raspberrypi.org) or [Arduino](http://www.arduino.cc).
+I am currently working in Montreal, Canada as a senior data scientist at [www.riotinto.com](). I am enjoying very much programming in [R](http://cran.r-project.org), [python for analytics](http://pandas.pydata.org) and [Apache Spark](http://spark.apache.org). Never stop looking into new technology like [docker](https://www.docker.com), [mesos](http://mesos.apache.org), [Elastic Search](https://www.elastic.co) and some fun stuff like [Raspberry Pi](https://www.raspberrypi.org) or [Arduino](http://www.arduino.cc).
 
 Portfolio:
 
@@ -20,19 +20,29 @@ I also do technical review for [Synced Review (机器之心)](https://syncedrevi
 <!-- The Timeline -->
 <div class="row" id="timeline">
 <ul class="timeline">
-
     <!-- Item 0 -->
     <li>
         <div class="direction-l">
             <div class="flag-wrapper">
+                <span class="flag">Rio Tinto</span>
+                <span class="time-wrapper"><span class="time">2018 - present</span></span>
+            </div>
+            <div class="desc">Industrial Data Science, working with RTX, RTA, RTFT, RTB on diversified projects by leveraging the power of data: from exploration (remote sensing) to mining operation, from stockpile to asset reliability and safty. </div>
+        </div>
+    </li>
+    
+    <!-- Item 1 -->
+    <li>
+        <div class="direction-l">
+            <div class="flag-wrapper">
                 <span class="flag">SSENSE</span>
-                <span class="time-wrapper"><span class="time">2016 - present</span></span>
+                <span class="time-wrapper"><span class="time">2016 - 2018</span></span>
             </div>
             <div class="desc">Data Scientist who tackles the problem for fashion E-Commerce company in various domains, such as customer insights, machiandise sizing, markdown sales, product recommendation.</div>
         </div>
     </li>
     
-    <!-- Item 1 -->
+    <!-- Item 2 -->
     <li>
         <div class="direction-r">
             <div class="flag-wrapper">
@@ -43,7 +53,7 @@ I also do technical review for [Synced Review (机器之心)](https://syncedrevi
         </div>
     </li>
   
-    <!-- Item 2 -->
+    <!-- Item 3 -->
     <li>
         <div class="direction-l">
             <div class="flag-wrapper">
@@ -54,7 +64,7 @@ I also do technical review for [Synced Review (机器之心)](https://syncedrevi
         </div>
     </li>
 
-    <!-- Item 3 -->
+    <!-- Item 4 -->
     <li>
         <div class="direction-r">
             <div class="flag-wrapper">
@@ -65,7 +75,7 @@ I also do technical review for [Synced Review (机器之心)](https://syncedrevi
         </div>
     </li>
 
-    <!-- Item 4 -->
+    <!-- Item 5 -->
     <li>
         <div class="direction-l">
             <div class="flag-wrapper">
@@ -76,7 +86,7 @@ I also do technical review for [Synced Review (机器之心)](https://syncedrevi
         </div>
     </li>
 
-    <!-- Item 5 -->
+    <!-- Item 6 -->
     <li>
         <div class="direction-r">
             <div class="flag-wrapper">
