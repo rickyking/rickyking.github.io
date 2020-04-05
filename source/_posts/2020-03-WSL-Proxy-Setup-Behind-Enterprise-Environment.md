@@ -19,7 +19,7 @@ Setting up `cntlm` will help us to make the WSL communicate with outside world. 
 
 To install cntlm in WSL ubuntu do the following: `sudo apt install cntlm`
 
-However, if you are in the enterprise network, you will not be able to do so. So go to [https://packages.ubuntu.com/bionic/net/cntlm]() download the relevant package.
+However, if you are in the enterprise network, you will not be able to do so. So go to [https://packages.ubuntu.com/bionic/net/cntlm](https://packages.ubuntu.com/bionic/net/cntlm) download the relevant package.
 
 To configure the cntlm for ubuntu, we need to set up conf in `/etc/cntlm.conf`: `domain`, `username`, `password` and `proxy:port`
 
@@ -68,7 +68,7 @@ Acquire {
 
 **R**
 
-c.f. : [https://support.rstudio.com/hc/en-us/articles/200488488-Configuring-R-to-Use-an-HTTP-or-HTTPS-Proxy]()
+c.f. : [https://support.rstudio.com/hc/en-us/articles/200488488-Configuring-R-to-Use-an-HTTP-or-HTTPS-Proxy](https://support.rstudio.com/hc/en-us/articles/200488488-Configuring-R-to-Use-an-HTTP-or-HTTPS-Proxy)
 
 To set the required environment variables you should add them to the R environment file. On RStudio Server this file is found at `R_HOME/etc/Renviron.site`. On RStudio Desktop this file is found in the user home directory at`~/.Renviron`. 
 
@@ -92,6 +92,8 @@ We are not done yet. We need to get the SSL certificate to make all the stuff wo
 To get the certificate, we can obtain the certificate as follows on Windows in Chrome. Assuming your proxy performing an MITM, go to a website which is using the proxy certificate. Click the lock icon next to the URL in chorme in the address bar. Click certificate. Go to Certification Path tab. Select the root certificate in the tree. Then click View Certificate.
 
 In the new dialog box, go to Details tab and click Copy to File. Then export the certificate as a base 64 encoded file. Place this file in a sensible location.
+
+c.f. [https://superuser.com/questions/437330/how-do-you-add-a-certificate-authority-ca-to-ubuntu](https://superuser.com/questions/437330/how-do-you-add-a-certificate-authority-ca-to-ubuntu) for system wide setup
 
 For conda/pip set:
 
