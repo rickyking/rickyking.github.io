@@ -14,4 +14,4 @@ categories:
 
 I was lucky to be able to join the 2019 Deep Learning Summer School in Montreal hosted by IVADO and MILA lab. 
 
-Here shared are some notes I took and some material of the workshop: [Deep Learning Summer School 2019 IVADO-MILA](https://jinyi.me/dl-summer-school-md-2019/)
+Here shared are some notes I took and some material of the workshop: [Deep Learning Summer School 2019 IVADO-MILA](https://github.com/rickyking/dl-summer-school-mtl-201909)
