@@ -3,6 +3,16 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Markdown-it config
+markdown_it_plus:
+  highlight: true
+  html: true
+  xhtmlOut: false
+  breaks: true
+  langPrefix:
+  linkify: true
+  typographer: true
+  quotes: “”‘’
+
 ## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
 # markdown:
 #   render:
@@ -62,9 +72,10 @@ future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: false
+  auto_detect: true
   tab_replace:
-
+prismjs:
+  enable: false
 # admin page
 #admin:
 #  username: starrynight

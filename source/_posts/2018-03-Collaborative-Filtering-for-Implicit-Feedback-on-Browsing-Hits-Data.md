@@ -29,7 +29,7 @@ Preference:
 $$
 P_{ui} =
 \begin{cases}
-1, & r_{ui} > 0 \\\
+1, & r_{ui} > 0 \\
 0, & r_{ui} = 0
 \end{cases}
 $$
@@ -39,7 +39,7 @@ Confidence:
 $$
 C_{ui} =
 \begin{cases}
-1 + \alpha \times r_{ui}, & r_{ui} > 0 \\\
+1 + \alpha \times r_{ui}, & r_{ui} > 0 \\
 1, & r_{ui} = 0
 \end{cases}
 $$
