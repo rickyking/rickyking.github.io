@@ -4,20 +4,20 @@
 
 # Markdown-it config
 ## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
-markdown:
-  render:
-    html: true
-    xhtmlOut: false
-    breaks: true
-    linkify: true
-    typographer: true
-    quotes: '“”‘’'
-  plugins:
-    - markdown-it-abbr
-    - markdown-it-footnote
-    - markdown-it-ins
-    - markdown-it-sub
-    - markdown-it-sup
+# markdown:
+#   render:
+#     html: true
+#     xhtmlOut: false
+#     breaks: true
+#     linkify: true
+#     typographer: true
+#     quotes: "“”‘’"
+#   plugins:
+#     - markdown-it-abbr
+#     - markdown-it-footnote
+#     - markdown-it-ins
+#     - markdown-it-sub
+#     - markdown-it-sup
 
 # Site
 title: Yi's Notes
@@ -26,16 +26,17 @@ description:
 author: Yi Jin
 email: y.jin@me.com
 language:
-  - default
-  - zh-cn
-timezone:
+  - en
+timezone: America/New_York
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://jinyi.me
 root: /
 permalink: :year/:month/:title/
-
+pretty_urls:
+  pretty_urls.trailing_index: true
+  pretty_urls.trailing_html: true
 
 # Directory
 source_dir: source
@@ -45,13 +46,14 @@ archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
-skip_render: ['portfolio/assets/**']
+skip_render: ["portfolio/assets/**"]
 
 # Writing
 new_post_name: :year-:month-:title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
-external_link: true # Open external links in new tab
+external_link:
+  external_link.enable: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
 post_asset_folder: true
@@ -103,20 +105,11 @@ time_format: HH:mm:ss
 per_page: 5
 pagination_dir: page
 
-
 # Extensions
 ## Plugins: https://github.com/hexojs/hexo/wiki/Plugins
 ## Themes: https://github.com/hexojs/hexo/wiki/Themes
-theme: next-reloaded
+theme: next
 exclude_generator:
-
-math:
-  engine: 'katex'
-  katex:
-    css: #custom_css_source
-    js: # not used
-    config:
-      # KaTeX config
 
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
@@ -135,20 +128,22 @@ index_generator:
   per_page: 10 ##首页默认10篇文章标题 如果值为0不分页
 
 archive_generator:
-    per_page: 10 ##归档页面默认10篇文章标题
-    yearly: true  ##生成年视图
-    monthly: true ##生成月视图
+  per_page: 10 ##归档页面默认10篇文章标题
+  yearly: true ##生成年视图
+  monthly: true ##生成月视图
 
 tag_generator:
-    per_page: 10 ##标签分类页面默认10篇文章
+  per_page: 10 ##标签分类页面默认10篇文章
 
 sitemap:
-    path: sitemap.xml
-# NexT 主题相关配置 ==========================
-since: 2013
-avatar: ./images/avatar.jpg
-google_site_verification: O-lITYmZBAkYSFBznsotea7jNhkjWVfNgKXjf3Vhi_0
-google_analytics: UA-44808321-2
+  path: sitemap.xml
 
 # Social links
 icon_font: fifty-shades
+
+# search
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000

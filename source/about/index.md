@@ -112,5 +112,5 @@ I also do technical review for [Synced Review (机器之心)](https://syncedrevi
 <br/>
 **CV** update @Feb 28, 2018
 <div class="row">
-<embed src="./CV.pdf" width="100%" height="1000px" type="application/pdf">
+{% pdf ./CV.pdf 1000px %}
 </div>
