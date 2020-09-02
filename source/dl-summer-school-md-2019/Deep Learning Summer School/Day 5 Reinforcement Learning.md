@@ -1,4 +1,7 @@
-# Day 5: Reinforcement Learning
+---
+title: Day 5 Reinforcement Learning
+date: 2019-10-07 14:32:46
+---
 
 # RL part 1
 

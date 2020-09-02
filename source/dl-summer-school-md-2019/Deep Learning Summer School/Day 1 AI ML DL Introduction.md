@@ -1,3 +1,8 @@
+---
+title: Day 1 AI/ML/DL Introduction
+date: 2019-10-07 14:32:46
+---
+
 # Day 1: AI/ML/DL Introduction
 
 # Mila Introduction

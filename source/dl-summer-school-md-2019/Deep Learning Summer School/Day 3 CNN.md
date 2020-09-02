@@ -1,4 +1,8 @@
-# Day 3: CNN
+---
+title: Day 3 CNN
+date: 2019-10-07 14:32:46
+---
+
 
 [CS231n Convolutional Neural Networks for Visual Recognition](http://cs231n.github.io/convolutional-networks/)
 
