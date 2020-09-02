@@ -1,8 +1,13 @@
-# Day 4: RNN | Seq2Seq → Transformer | NLP
+---
+title:  Day 4 RNN / Seq2Seq → Transformer / NLP
+date: 2019-10-07 14:32:46
+---
+
+
 
 # Recurrent Neural Networks
 
-[](https://github.com/mila-iqia/ivado-mila-dl-school-2019/blob/master/presentations/day4/1_recurrent_neural_networks.pdf)
+https://github.com/mila-iqia/ivado-mila-dl-school-2019/blob/master/presentations/day4/1_recurrent_neural_networks.pdf
 
 ## Motivation
 

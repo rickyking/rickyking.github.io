@@ -1,4 +1,7 @@
-# Day 2: Deep Learning Introduction
+---
+title: Day 2 Deep Learning Introduction
+date: 2019-10-07 14:32:46
+---
 
 # Introduction of DL
 
