@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jinyi.me","root":"/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="Introduction Package rCharts provides a quick access to interactive plots. It includes the following javascript packages:  Polycharts: rPlot Morris: mPlot NVD3: nPlot xCharts: xPlot Highcharts: hPlot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to use rCharts - highcharts.js">
+<meta property="og:url" content="http://jinyi.me/2014/05/How-to-use-rCharts-highcharts-js/index.html">
+<meta property="og:site_name" content="Yi&#39;s Notes">
+<meta property="og:description" content="Introduction Package rCharts provides a quick access to interactive plots. It includes the following javascript packages:  Polycharts: rPlot Morris: mPlot NVD3: nPlot xCharts: xPlot Highcharts: hPlot">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2014-05-22T00:29:10.000Z">
+<meta property="article:modified_time" content="2021-03-01T21:54:04.617Z">
+<meta property="article:author" content="Yi Jin">
+<meta property="article:tag" content="r">
+<meta property="article:tag" content="shiny">
+<meta property="article:tag" content="rcharts">
+<meta property="article:tag" content="highcharts">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://jinyi.me/2014/05/How-to-use-rCharts-highcharts-js/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>How to use rCharts - highcharts.js | Yi's Notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-44808321-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-44808321-2');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Yi's Notes</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">⟨Data Scientist|Photographer⟩</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text"> Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-quick-interactive-graph"><span class="nav-number">2.</span> <span class="nav-text"> A quick interactive graph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#advanced-usage"><span class="nav-number">3.</span> <span class="nav-text"> Advanced usage</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yi Jin"
+      src="/./images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Yi Jin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://ca.linkedin.com/in/yjin88" title="LinkedIn → https:&#x2F;&#x2F;ca.linkedin.com&#x2F;in&#x2F;yjin88" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/rickyking" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rickyking" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://jinyi.me/2014/05/How-to-use-rCharts-highcharts-js/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/./images/avatar.jpg">
+      <meta itemprop="name" content="Yi Jin">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yi's Notes">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          How to use rCharts - highcharts.js<a href="https://github.com/rickyking/rickyking.github.io/edit/source/source/_posts/_posts/2014-05-How-to-use-rCharts-highcharts-js.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pen-nib"></i></a>
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2014-05-21 20:29:10" itemprop="dateCreated datePublished" datetime="2014-05-21T20:29:10-04:00">2014-05-21</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-03-01 16:54:04" itemprop="dateModified" datetime="2021-03-01T16:54:04-05:00">2021-03-01</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/R/" itemprop="url" rel="index"><span itemprop="name">R</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2014/05/How-to-use-rCharts-highcharts-js/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/05/How-to-use-rCharts-highcharts-js/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<p>Package <code>rCharts</code> provides a quick access to interactive plots. It includes the following javascript packages:</p>
+<ul>
+<li>Polycharts: rPlot</li>
+<li>Morris: mPlot</li>
+<li>NVD3: nPlot</li>
+<li>xCharts: xPlot</li>
+<li>Highcharts: hPlot</li>
+<li>Rickshaw: Rickshaw$new()</li>
+</ul>
+<a id="more"></a>
+<p>Here is a list of existing javascript libraries for data visualization.</p>
+<table>
+<thead>
+<tr>
+<th>language</th>
+<th>Library</th>
+<th>Package R</th>
+<th>Library Python</th>
+<th>Technology</th>
+<th>Compatibilité</th>
+<th>Document</th>
+<th>Licence</th>
+<th>Type Graphs</th>
+<th>Commentaire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>javascript</td>
+<td>D3.js</td>
+<td>None</td>
+<td>d3py</td>
+<td>svg</td>
+<td>IE9+, Chrome, Firefox, Safari, Opera</td>
+<td>Bien Documenté</td>
+<td>Open Source</td>
+<td>ALL</td>
+<td></td>
+</tr>
+<tr>
+<td>javascript</td>
+<td>HighCharts</td>
+<td>rCharts</td>
+<td>js.highcharts</td>
+<td>svg/vml</td>
+<td>IE6+, Chrome, Firefox, Safari, Opera</td>
+<td>Bien Documenté</td>
+<td>Commercial</td>
+<td>ALL Chart</td>
+<td></td>
+</tr>
+<tr>
+<td>javascript</td>
+<td>Raphaël</td>
+<td>None</td>
+<td>js.raphael</td>
+<td>svg/vml</td>
+<td>IE6+, Chrome, Firefox, Safari, Opera</td>
+<td>Bien Documenté</td>
+<td>Open Source</td>
+<td>ALL</td>
+<td></td>
+</tr>
+<tr>
+<td>javascript/flash</td>
+<td>Google Chart</td>
+<td>googleVis</td>
+<td>pygooglechart</td>
+<td>svg/vml</td>
+<td>IE6+, Chrome, Firefox, Safari, Opera</td>
+<td>Bien Documenté</td>
+<td>Open Source</td>
+<td>ALL Chart</td>
+<td></td>
+</tr>
+<tr>
+<td>D3.js</td>
+<td>dimple</td>
+<td>rCharts</td>
+<td>None</td>
+<td>svg</td>
+<td>IE9+, Chrome, Firefox, Safari, Opera</td>
+<td>Demo/Example/API</td>
+<td>Open Source</td>
+<td>ALL Chart</td>
+<td></td>
+</tr>
+<tr>
+<td>D3.js</td>
+<td>NVD3</td>
+<td>rCharts</td>
+<td>python-nvd3</td>
+<td>svg</td>
+<td>IE9+, Chrome, Firefox, Safari, Opera</td>
+<td>Demo/Example</td>
+<td>Open Source</td>
+<td>ALL Chart</td>
+<td></td>
+</tr>
+<tr>
+<td>Raphaël</td>
+<td>PolyCharts</td>
+<td>rCharts</td>
+<td>None</td>
+<td>svg/vml</td>
+<td>IE6+, Chrome, Firefox, Safari, Opera</td>
+<td>Editor/API</td>
+<td>Open Source (Licence required for external deployment)</td>
+<td>ALL Chart</td>
+<td>Spotfire Like/Neo4j</td>
+</tr>
+<tr>
+<td>Raphaël</td>
+<td>Morris</td>
+<td>rCharts</td>
+<td>None</td>
+<td>svg/vml</td>
+<td>IE6+, Chrome, Firefox, Safari, Opera</td>
+<td>Demo/Example</td>
+<td>Open Source</td>
+<td>Non Rich</td>
+<td></td>
+</tr>
+<tr>
+<td>D3.js</td>
+<td>xCharts</td>
+<td>rCharts</td>
+<td>None</td>
+<td>svg</td>
+<td>IE9+, Chrome, Firefox, Safari, Opera</td>
+<td>Demo/Example/API</td>
+<td>Open Source</td>
+<td>Riche en Animation</td>
+<td></td>
+</tr>
+<tr>
+<td>D3.js</td>
+<td>RickShaw</td>
+<td>rCharts</td>
+<td>js.rickshaw</td>
+<td>svg</td>
+<td>IE9+, Chrome, Firefox, Safari, Opera</td>
+<td>Demo/Example</td>
+<td>Open Source</td>
+<td>Time Series/Stream</td>
+<td></td>
+</tr>
+<tr>
+<td>D3.js / Langage</td>
+<td>Vega</td>
+<td>rCharts</td>
+<td>Vincent</td>
+<td>svg</td>
+<td>IE9+, Chrome, Firefox, Safari, Opera</td>
+<td>Editor/Example/Document</td>
+<td>Open Source</td>
+<td>ALL</td>
+<td>ggplot2 Like</td>
+</tr>
+<tr>
+<td>D3.js</td>
+<td>uvCharts</td>
+<td>rCharts</td>
+<td>None</td>
+<td>svg</td>
+<td>IE9+, Chrome, Firefox, Safari, Opera</td>
+<td>Demo/Example/API</td>
+<td>Open Source</td>
+<td>ALL Chart</td>
+<td></td>
+</tr>
+<tr>
+<td>javascript</td>
+<td>sigma.js</td>
+<td>rgexf</td>
+<td></td>
+<td>Canvas/WebGL</td>
+<td>IE9+, Chrome, Firefox, Safari, Opera</td>
+<td>Demo/Example/API</td>
+<td>Open Source</td>
+<td>Network</td>
+<td>Gephi</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a-quick-interactive-graph"><a class="markdownIt-Anchor" href="#a-quick-interactive-graph"></a> A quick interactive graph</h2>
+<p>Use the corresponding quick graph creation code (see previous section: <code>rPlot</code>, <code>hPlot</code>, <code>nPlot</code>, <code>xPlot</code>, etc) to create a fast interactive graph with the formula-<a target="_blank" rel="noopener" href="http://www.statmethods.net/advgraphs/trellis.html">lattice</a>-like graph grammar.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span>(rCharts)</span><br><span class="line">r1 &lt;- rPlot(mpg ~ wt | am + vs, data = mtcars, type = <span class="string">&quot;point&quot;</span>, color = <span class="string">&quot;gear&quot;</span>)</span><br><span class="line">r1</span><br></pre></td></tr></table></figure>
+<p>The following code provides a better binding in Knitr (see [reproducible reporting]):</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span>(rCharts)</span><br><span class="line">r1 &lt;- rPlot(mpg ~ wt | am + vs, data = mtcars, type = <span class="string">&quot;point&quot;</span>, color = <span class="string">&quot;gear&quot;</span>)</span><br><span class="line">r1$show(<span class="string">&quot;inline&quot;</span>, include_assets = <span class="literal">T</span>, cdn = <span class="literal">T</span>)</span><br></pre></td></tr></table></figure>
+<script type='text/javascript' src=http://ramnathv.github.io/rCharts/libraries/widgets/polycharts/js/polychart2.standalone.js></script>
+ <style>
+  .rChart {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
+    height: 400px;
+  }
+  </style>
+<div id = 'chart132456ea2ce4' class = 'rChart polycharts'></div>
+<script type='text/javascript'>
+    var chartParams = {
+ "dom": "chart132456ea2ce4",
+"width":    800,
+"height":    400,
+"layers": [
+ {
+ "x": "wt",
+"y": "mpg",
+"data": {
+ "mpg": [     21,     21,   22.8,   21.4,   18.7,   18.1,   14.3,   24.4,   22.8,   19.2,   17.8,   16.4,   17.3,   15.2,   10.4,   10.4,   14.7,   32.4,   30.4,   33.9,   21.5,   15.5,   15.2,   13.3,   19.2,   27.3,     26,   30.4,   15.8,   19.7,     15,   21.4 ],
+"cyl": [      6,      6,      4,      6,      8,      6,      8,      4,      4,      6,      6,      8,      8,      8,      8,      8,      8,      4,      4,      4,      4,      8,      8,      8,      8,      4,      4,      4,      8,      6,      8,      4 ],
+"disp": [    160,    160,    108,    258,    360,    225,    360,  146.7,  140.8,  167.6,  167.6,  275.8,  275.8,  275.8,    472,    460,    440,   78.7,   75.7,   71.1,  120.1,    318,    304,    350,    400,     79,  120.3,   95.1,    351,    145,    301,    121 ],
+"hp": [    110,    110,     93,    110,    175,    105,    245,     62,     95,    123,    123,    180,    180,    180,    205,    215,    230,     66,     52,     65,     97,    150,    150,    245,    175,     66,     91,    113,    264,    175,    335,    109 ],
+"drat": [    3.9,    3.9,   3.85,   3.08,   3.15,   2.76,   3.21,   3.69,   3.92,   3.92,   3.92,   3.07,   3.07,   3.07,   2.93,      3,   3.23,   4.08,   4.93,   4.22,    3.7,   2.76,   3.15,   3.73,   3.08,   4.08,   4.43,   3.77,   4.22,   3.62,   3.54,   4.11 ],
+"wt": [   2.62,  2.875,   2.32,  3.215,   3.44,   3.46,   3.57,   3.19,   3.15,   3.44,   3.44,   4.07,   3.73,   3.78,   5.25,  5.424,  5.345,    2.2,  1.615,  1.835,  2.465,   3.52,  3.435,   3.84,  3.845,  1.935,   2.14,  1.513,   3.17,   2.77,   3.57,   2.78 ],
+"qsec": [  16.46,  17.02,  18.61,  19.44,  17.02,  20.22,  15.84,     20,   22.9,   18.3,   18.9,   17.4,   17.6,     18,  17.98,  17.82,  17.42,  19.47,  18.52,   19.9,  20.01,  16.87,   17.3,  15.41,  17.05,   18.9,   16.7,   16.9,   14.5,   15.5,   14.6,   18.6 ],
+"vs": [      0,      0,      1,      1,      0,      1,      0,      1,      1,      1,      1,      0,      0,      0,      0,      0,      0,      1,      1,      1,      1,      0,      0,      0,      0,      1,      0,      1,      0,      0,      0,      1 ],
+"am": [      1,      1,      1,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      1,      1,      1,      0,      0,      0,      0,      0,      1,      1,      1,      1,      1,      1,      1 ],
+"gear": [      4,      4,      4,      3,      3,      3,      3,      4,      4,      4,      4,      3,      3,      3,      3,      3,      3,      4,      4,      4,      3,      3,      3,      3,      3,      4,      5,      5,      5,      5,      5,      4 ],
+"carb": [      4,      4,      1,      1,      2,      1,      4,      2,      2,      4,      4,      3,      3,      3,      4,      4,      4,      1,      2,      1,      1,      2,      2,      4,      2,      1,      2,      2,      4,      6,      8,      2 ]
+},
+"facet": [ "am", "vs" ],
+"type": "point",
+"color": "gear"
+}
+],
+"facet": {
+ "type": "grid",
+"x": "am",
+"y": "vs"
+},
+"guides": [],
+"coord": [],
+"id": "chart132456ea2ce4"
+}
+    _.each(chartParams.layers, function(el){
+        el.data = polyjs.data(el.data)
+    })
+    var graph_chart132456ea2ce4 = polyjs.chart(chartParams);
+</script>
+<p>And with the following code permits the binding in <code>shiny</code>:</p>
+<ul>
+<li>server.R
+<ul>
+<li>Always load package <code>rCharts</code></li>
+<li>Use shiny-ui function (rCharts personalized) <code>renderChart(&#123;&#125;)</code> for generate graph</li>
+<li>Must use <code>addParams</code> methode to add a parameter <code>dom</code> and give the name of <code>outputid</code> (i.e. the name when you use for ui-output function)</li>
+<li>Remember to return the object rCharts by function <code>return()</code></li>
+</ul>
+</li>
+<li>ui.R
+<ul>
+<li>use <code>showOutput(&quot;outputid&quot;,&quot;package-name&quot;)</code> to display the graph in the bootstrap grid</li>
+<li>“package-name” should always be in lower case and correspond to the package function used in <code>server.R</code></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## server.r</span></span><br><span class="line">require(rCharts)</span><br><span class="line">shinyServer(function(input, output) &#123;</span><br><span class="line">  output<span class="variable">$myChart</span> &lt;- renderChart(&#123;</span><br><span class="line">    names(iris) = gsub(<span class="string">&quot;\\.&quot;</span>, <span class="string">&quot;&quot;</span>, names(iris))</span><br><span class="line">    p1 &lt;- rPlot(input<span class="variable">$x</span>, input<span class="variable">$y</span>, data = iris, color = <span class="string">&quot;Species&quot;</span>,</span><br><span class="line">      facet = <span class="string">&quot;Species&quot;</span>,<span class="built_in"> type </span>= <span class="string">&#x27;point&#x27;</span>)</span><br><span class="line">    p1<span class="variable">$addParams</span>(dom = <span class="string">&#x27;myChart&#x27;</span>)</span><br><span class="line">    return(p1)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">## ui.R</span></span><br><span class="line">require(rCharts)</span><br><span class="line">shinyUI(pageWithSidebar(</span><br><span class="line">  headerPanel(<span class="string">&quot;rCharts: Interactive Charts from R using polychart.js&quot;</span>),</span><br><span class="line">  sidebarPanel(</span><br><span class="line">    selectInput(inputId = <span class="string">&quot;x&quot;</span>,</span><br><span class="line">     label = <span class="string">&quot;Choose X&quot;</span>,</span><br><span class="line">     choices = c(<span class="string">&#x27;SepalLength&#x27;</span>, <span class="string">&#x27;SepalWidth&#x27;</span>, <span class="string">&#x27;PetalLength&#x27;</span>, <span class="string">&#x27;PetalWidth&#x27;</span>),</span><br><span class="line">     selected = <span class="string">&quot;SepalLength&quot;</span>),</span><br><span class="line">    selectInput(inputId = <span class="string">&quot;y&quot;</span>,</span><br><span class="line">      label = <span class="string">&quot;Choose Y&quot;</span>,</span><br><span class="line">      choices = c(<span class="string">&#x27;SepalLength&#x27;</span>, <span class="string">&#x27;SepalWidth&#x27;</span>, <span class="string">&#x27;PetalLength&#x27;</span>, <span class="string">&#x27;PetalWidth&#x27;</span>),</span><br><span class="line">      selected = <span class="string">&quot;SepalWidth&quot;</span>)</span><br><span class="line">  ),</span><br><span class="line">  mainPanel(</span><br><span class="line">    showOutput(<span class="string">&quot;myChart&quot;</span>, <span class="string">&quot;polycharts&quot;</span>)</span><br><span class="line">  )</span><br><span class="line">))</span><br></pre></td></tr></table></figure>
+<p><strong>More basic/advanced using example, you can visit [<a target="_blank" rel="noopener" href="https://github.com/ramnathv/rCharts/tree/master/inst/libraries">https://github.com/ramnathv/rCharts/tree/master/inst/libraries</a>], and in each libraries you can find <code>examples.R</code> for detailed usage.</strong></p>
+<h2 id="advanced-usage"><a class="markdownIt-Anchor" href="#advanced-usage"></a> Advanced usage</h2>
+<p>You could find some advanced usages in <code>examples.R</code> file. Here, we explain how to create an object rcharts and generate a more personalized plots. The example libraries will be based on HighCharts.</p>
+<p>Here is an example code from <code>examples.R</code> of HighCharts.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a &lt;- rCharts::Highcharts$new()</span><br><span class="line">a$chart(type = <span class="string">&quot;column&quot;</span>)</span><br><span class="line">a$series(data = list(list(y = <span class="number">15</span>, drilldown = list(data = c(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>))), list(y = <span class="number">20</span>,</span><br><span class="line">    drilldown = list(data = c(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)))), name = <span class="string">&quot;test&quot;</span>)</span><br><span class="line">a$xAxis(categories = c(<span class="string">&quot;Brand A&quot;</span>, <span class="string">&quot;Brand B&quot;</span>))</span><br><span class="line">a$plotOptions(column = list(cursor = <span class="string">&quot;pointer&quot;</span>, point = list(events = list(click = drill_function))))</span><br></pre></td></tr></table></figure>
+<p>As we can see:</p>
+<ol>
+<li>We first create a rCharts object of Highcharts which use the Highcharts template: <code>a &lt;- rCharts::Highcharts$new()</code></li>
+<li>Then we modify in the object in the list “chart”, the value of type equals to “column”: <code>a$chart(type = &quot;column&quot;)</code></li>
+<li>Create a data series by adding a list of sub-lists data to “series” of a.</li>
+<li>Modify xAxis labels by giving “Brand A” and “Brand B”</li>
+<li>The plotOptions is modified to adapt the requirement</li>
+</ol>
+<p>If you are confused, that is normal. Here the very first step is to understand how a highcharts javascript works:</p>
+<iframe width="100%" height="500" src="http://jsfiddle.net/rickyking/Pxrjh/3/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+<p>In the above we can see in “result” we have the same plot generated by the R code. Compare it!</p>
+<ol>
+<li>we see that <code>a$chart(type = &quot;column&quot;)</code> is <code>&quot;chart&quot;: &#123;&quot;type&quot;: &quot;column&quot;, &quot;renderTo&quot;: &quot;chart262c158f3b56&quot;&#125;</code> (ignore “renderTo”, some parameters are set by defaut in the package for certain reasons: generate a working standalone page, shiny application support, etc.)</li>
+<li><code>a$series</code> generates <code>&quot;series&quot;: [&#123;&quot;data&quot;: [&#123;...</code>, and for a detailed reference of which format of data is accepted in highcharts, we should reference to [<a target="_blank" rel="noopener" href="http://api.highcharts.com/highcharts#series">http://api.highcharts.com/highcharts#series</a>], and how to create them, we will see that later.</li>
+<li><code>a$xAxis(categories = c(&quot;Brand A&quot;, &quot;Brand B&quot;))</code> this line generates <code>&quot;xAxis&quot;: [&#123;&quot;categories&quot;: [ &quot;Brand A&quot;, &quot;Brand B&quot; ] &#125;]</code></li>
+<li>for plotOptions as well</li>
+</ol>
+<p>Why use highcharts as an example? The reason is quite simple: well documented <a target="_blank" rel="noopener" href="http://api.highcharts.com/">API</a>, a <a target="_blank" rel="noopener" href="http://www.highcharts.com/demo">gallery</a> of examples which you can see the javascript in the live and compare your code of javascript (generated by R to this api).</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/05/NYC-CitiBike-6-Application-R-Shiny/" rel="bookmark">NYC CitiBike [6] - Application R-Shiny</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/03/NYC-CitiBike-1-Data-Retrieval/" rel="bookmark">NYC CitiBike [1] - Data Retrieval</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/04/NYC-CitiBike-4-Model-Framework/" rel="bookmark">NYC CitiBike [4] - Model Framework</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/05/Geocoding-with-R-Python/" rel="bookmark">Geocoding with R/Python</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/04/Setting-Up-starryLab-R-RStudio-Server-Shiny-Server/" rel="bookmark">Setting Up starryLab (R, RStudio-Server, Shiny-Server, ...)</a></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/r/" rel="tag"># r</a>
+              <a href="/tags/shiny/" rel="tag"># shiny</a>
+              <a href="/tags/rcharts/" rel="tag"># rcharts</a>
+              <a href="/tags/highcharts/" rel="tag"># highcharts</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/03/Spark-Training-introduction/" rel="next" title="Spark Training [introduction]">
+                  Spark Training [introduction] <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yi Jin</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+<script>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  const url = element.dataset.target;
+  const pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  const pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  const fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+  <script src="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.css">
+
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://starrynight88.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://jinyi.me/2014/05/How-to-use-rCharts-highcharts-js/";
+    this.page.identifier = "2014/05/How-to-use-rCharts-highcharts-js/";
+    this.page.title = "How to use rCharts - highcharts.js";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://starrynight88.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

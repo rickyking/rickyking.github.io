@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jinyi.me","root":"/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="What is geocoding Geocoding and reverse geocoding are the process of turning the address or place name into geographic coordinates, vice versa. More detailed definition: wikipedia Simple illustration">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Geocoding with R&#x2F;Python">
+<meta property="og:url" content="http://jinyi.me/2015/05/Geocoding-with-R-Python/index.html">
+<meta property="og:site_name" content="Yi&#39;s Notes">
+<meta property="og:description" content="What is geocoding Geocoding and reverse geocoding are the process of turning the address or place name into geographic coordinates, vice versa. More detailed definition: wikipedia Simple illustration">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2015-05-28T14:15:40.000Z">
+<meta property="article:modified_time" content="2021-03-01T21:54:04.653Z">
+<meta property="article:author" content="Yi Jin">
+<meta property="article:tag" content="r">
+<meta property="article:tag" content="data science">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="geo">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://jinyi.me/2015/05/Geocoding-with-R-Python/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Geocoding with R/Python | Yi's Notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-44808321-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-44808321-2');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Yi's Notes</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">⟨Data Scientist|Photographer⟩</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-geocoding"><span class="nav-number">1.</span> <span class="nav-text"> What is geocoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#implementation"><span class="nav-number">2.</span> <span class="nav-text"> Implementation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#geocoding-using-r"><span class="nav-number">3.</span> <span class="nav-text"> Geocoding using R</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ggmap-example"><span class="nav-number">3.1.</span> <span class="nav-text"> ggmap example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#coding-yourself-in-r"><span class="nav-number">3.2.</span> <span class="nav-text"> Coding yourself in R</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#geocoding-using-python"><span class="nav-number">4.</span> <span class="nav-text"> Geocoding using python</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yi Jin"
+      src="/./images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Yi Jin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://ca.linkedin.com/in/yjin88" title="LinkedIn → https:&#x2F;&#x2F;ca.linkedin.com&#x2F;in&#x2F;yjin88" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/rickyking" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rickyking" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://jinyi.me/2015/05/Geocoding-with-R-Python/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/./images/avatar.jpg">
+      <meta itemprop="name" content="Yi Jin">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yi's Notes">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Geocoding with R/Python<a href="https://github.com/rickyking/rickyking.github.io/edit/source/source/_posts/_posts/2015-05-Geocoding-with-R-Python.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pen-nib"></i></a>
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2015-05-28 10:15:40" itemprop="dateCreated datePublished" datetime="2015-05-28T10:15:40-04:00">2015-05-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-03-01 16:54:04" itemprop="dateModified" datetime="2021-03-01T16:54:04-05:00">2021-03-01</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/toolbox/" itemprop="url" rel="index"><span itemprop="name">toolbox</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2015/05/Geocoding-with-R-Python/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/05/Geocoding-with-R-Python/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="what-is-geocoding"><a class="markdownIt-Anchor" href="#what-is-geocoding"></a> What is geocoding</h2>
+<p>Geocoding and reverse geocoding are the process of turning the address or place name into geographic coordinates, vice versa.</p>
+<p>More detailed definition: <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Geocoding">wikipedia</a></p>
+<p>Simple illustration:</p>
+<blockquote>
+<p>Address --&gt; Latitude,Longitude: Geocoding<br>
+Latitude,Longitude --&gt; Address: Reverse geocoding</p>
+</blockquote>
+<h2 id="implementation"><a class="markdownIt-Anchor" href="#implementation"></a> Implementation</h2>
+<p>The implementation is done by various providers, here is a <a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/geocoder">list</a>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Global</th>
+<th style="text-align:left">Country</th>
+<th style="text-align:left">Specialized</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://developers.google.com/maps/documentation/geocoding/">Google</a></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://api.yandex.com/maps/doc/geocoder/desc/concepts/input_params.xml">Yandex</a></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://maps.ottawa.ca/geoottawa/">GeoOttawa</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://msdn.microsoft.com/en-us/library/ff701714.aspx">Bing</a></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://geocoder.ca/?api=1">Geocoder.ca</a></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://freegeoip.net/">FreeGeoIP</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://wiki.openstreetmap.org/wiki/Nominatim">OpenStreetMap</a></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://developer.baidu.com/map/index.php?title=webapi/guide/webservice-geocoding">Baidu</a></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://www.maxmind.com/en/geolocation_landing">MaxMind</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://developer.here.com/rest-apis/documentation/geocoder">HERE</a></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://developer.what3words.com/">What3Words</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://developer.tomtom.com/products/geocoding_api">TomTom</a></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://www.canadapost.ca/pca/">CanadaPost</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://www.mapquestapi.com/geocoding/">MapQuest</a></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://www.geonames.org/export/web-services.html">GeoNames</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="http://geocoder.opencagedata.com/api.html">OpenCage</a></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://developer.yahoo.com/boss/geo/">Yahoo</a></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://developers.arcgis.com/rest/geocode/api-reference/geocoding-find.htm">ArcGIS</a></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>So with these services, next step is to use script to access the service’s API.</p>
+<a id="more"></a>
+<h2 id="geocoding-using-r"><a class="markdownIt-Anchor" href="#geocoding-using-r"></a> Geocoding using R</h2>
+<p>Basically in R, two packages are implemented:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://cran.r-project.org/web/packages/ggmap/index.html">ggmap</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/corynissen/geocodeHERE">geocodeHERE</a></li>
+</ul>
+<h3 id="ggmap-example"><a class="markdownIt-Anchor" href="#ggmap-example"></a> ggmap example</h3>
+<p><code>ggmap</code> provides <a target="_blank" rel="noopener" href="https://developers.google.com/maps/documentation/geocoding/">Google Maps API</a>:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># invoke the geocode function</span></span><br><span class="line">ggmap::geocode(<span class="string">&quot;New York&quot;</span>)</span><br><span class="line"><span class="comment"># Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=New+York&amp;sensor=false</span></span><br><span class="line"><span class="comment">#         lon      lat</span></span><br><span class="line"><span class="comment"># 1 -74.00594 40.71278</span></span><br></pre></td></tr></table></figure>
+<p>The output level can be chosen by invoking the parameter: <code>output = c(&quot;latlon&quot;, &quot;latlona&quot;, &quot;more&quot;, &quot;all&quot;)</code>.</p>
+<p>And the free tier query rate can be check via <code>geocodeQueryCheck(userType = &quot;free&quot;)</code>.</p>
+<p><em>For the newly developed package <code>geocodeHERE</code>, please consult the github page.</em></p>
+<h3 id="coding-yourself-in-r"><a class="markdownIt-Anchor" href="#coding-yourself-in-r"></a> Coding yourself in R</h3>
+<p>I have created a R function that uses <a target="_blank" rel="noopener" href="http://msdn.microsoft.com/en-us/library/ff701714.aspx">Bing</a> Geocoding service. The function import two packages: <code>httr</code> &amp; <code>RJSONIO</code>. <code>httr</code> provides the <code>cURL</code> interface to do the <code>GET</code> action. <code>RJSONIO</code> is used to parse the returned json content. The function takes the <code>address</code> string and the authentication <code>key</code> as parameter input, then returns in data frame.</p>
+<p>You can get your key from <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/ff428642.aspx">here</a>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">geocoder &lt;-</span><br><span class="line">  <span class="keyword">function</span>(addr, key = <span class="string">&quot;Aq1OdgJVGKWyPuRcaIpgsG8pZcSzy0wLF31OVyY8sSq0sWA5npVn-MAAU9sVU97f&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">require</span>(httr)</span><br><span class="line">    <span class="keyword">require</span>(RJSONIO)</span><br><span class="line">    reset_config()</span><br><span class="line">    link &lt;- <span class="string">&quot;http://dev.virtualearth.net/&quot;</span></span><br><span class="line">    add_returned &lt;- modify_url(link, path=<span class="string">&quot;REST/v1/Locations&quot;</span>, query=list(location=addr,key=key))</span><br><span class="line">    json &lt;- <span class="keyword">try</span>(fromJSON(content(add_returned, as =<span class="string">&quot;text&quot;</span>)))</span><br><span class="line">    <span class="keyword">if</span> (class(json) != <span class="string">&quot;try-error&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (json$statusCode == <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (json$resourceSets[[<span class="number">1</span>]]$estimatedTotal &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          coordinates &lt;- data.frame(lat = json$resourceSets[[<span class="number">1</span>]]$resources[[<span class="number">1</span>]]$geocodePoints[[<span class="number">1</span>]]$coordinates[<span class="number">1</span>], lon = json$resourceSets[[<span class="number">1</span>]]$resources[[<span class="number">1</span>]]$geocodePoints[[<span class="number">1</span>]]$coordinates[<span class="number">2</span>])</span><br><span class="line">          add_detailed &lt;- json$resourceSets[[<span class="number">1</span>]]$resources[[<span class="number">1</span>]]$address</span><br><span class="line">          add_detailed &lt;- data.frame(t(json$resourceSets[[<span class="number">1</span>]]$resources[[<span class="number">1</span>]]$address))</span><br><span class="line">          data &lt;- cbind(addr, coordinates,add_detailed)</span><br><span class="line">          rownames(data) &lt;- <span class="literal">NULL</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> data &lt;- data.frame(addr)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">        data &lt;- data.frame(addr)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> data &lt;- data.frame(addr)</span><br><span class="line">    rownames(data) &lt;- <span class="literal">NULL</span></span><br><span class="line">    <span class="keyword">return</span>(data)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="geocoding-using-python"><a class="markdownIt-Anchor" href="#geocoding-using-python"></a> Geocoding using python</h2>
+<p>In python, you have more choices other than create your own function to <code>GET</code> and parse the API.</p>
+<p>Here are some wrapped packages:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/geocoder">geocoder</a>: wraps all services</li>
+<li><a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/geopy">geopy</a>: wraps all services</li>
+<li><a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/pygeocoder">pygeocoder</a>: only google</li>
+<li><a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/python-geocoder/0.2">python-geocoder</a>: only google</li>
+</ul>
+<p>The last two packages seem to be abandoned, at least not as powerful as first two packages.</p>
+<p><code>geocoder</code> is more simple and provides more useful returned values. The only problem is that <code>geocoder</code> seems to be python 2.x only.</p>
+<p><code>geopy</code> is python 2 &amp; 3 ready and implements with object-oriented programming. And you can have more thorough controls.</p>
+<p>Here is my sample code to read from <code>csv</code> file a column with header ‘location’ and return required value.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> geocoder</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"></span><br><span class="line">keybing=<span class="string">&quot;Aq1OdgJVGKWyPuRcaIpgsG8pZcSzy0wLF31OVyY8sSq0sWA5npVn-MAAU9sVU97f&quot;</span></span><br><span class="line"></span><br><span class="line">rows = []</span><br><span class="line">fieldnames = [<span class="string">&#x27;location&#x27;</span>, <span class="string">&#x27;lat&#x27;</span>, <span class="string">&#x27;lng&#x27;</span>, <span class="string">&#x27;city&#x27;</span>, <span class="string">&#x27;state&#x27;</span>, <span class="string">&#x27;country&#x27;</span>]</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;addr.csv&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        reader = csv.DictReader(f, delimiter=<span class="string">&#x27;;&#x27;</span>)</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> reader:</span><br><span class="line">                g = geocoder.bing(line[<span class="string">&#x27;location&#x27;</span>], key=keybing)</span><br><span class="line">                result = g.json</span><br><span class="line">                result.update(line)</span><br><span class="line">                rows.append(result)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">&quot;res.csv&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">        writer.writeheader()</span><br><span class="line">        writer.writerows(rows)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/03/NYC-CitiBike-2-Data-Exploration/" rel="bookmark">NYC CitiBike [2] - Data Exploration</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/04/NYC-CitiBike-3-More-Data-Exploration/" rel="bookmark">NYC CitiBike [3] - More Data Exploration</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/04/NYC-CitiBike-4-Model-Framework/" rel="bookmark">NYC CitiBike [4] - Model Framework</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/05/NYC-CitiBike-6-Application-R-Shiny/" rel="bookmark">NYC CitiBike [6] - Application R-Shiny</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/06/Shape-File-to-Geojson-in-R/" rel="bookmark">Shape File to Geojson in R</a></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/r/" rel="tag"># r</a>
+              <a href="/tags/data-science/" rel="tag"># data science</a>
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/geo/" rel="tag"># geo</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/05/NYC-CitiBike-6-Application-R-Shiny/" rel="prev" title="NYC CitiBike [6] - Application R-Shiny">
+                  <i class="fa fa-chevron-left"></i> NYC CitiBike [6] - Application R-Shiny
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/06/Shape-File-to-Geojson-in-R/" rel="next" title="Shape File to Geojson in R">
+                  Shape File to Geojson in R <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yi Jin</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+<script>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  const url = element.dataset.target;
+  const pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  const pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  const fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+  <script src="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.css">
+
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://starrynight88.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://jinyi.me/2015/05/Geocoding-with-R-Python/";
+    this.page.identifier = "2015/05/Geocoding-with-R-Python/";
+    this.page.title = "Geocoding with R/Python";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://starrynight88.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

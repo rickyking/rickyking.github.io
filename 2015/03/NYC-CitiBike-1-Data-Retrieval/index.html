@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jinyi.me","root":"/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="New York city’s Citi Bike provides an open data. All files are zipped and can be found over the site. The objectif is to use the dataset to do explore some interesting insight of the NYC citibike user">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NYC CitiBike [1] - Data Retrieval">
+<meta property="og:url" content="http://jinyi.me/2015/03/NYC-CitiBike-1-Data-Retrieval/index.html">
+<meta property="og:site_name" content="Yi&#39;s Notes">
+<meta property="og:description" content="New York city’s Citi Bike provides an open data. All files are zipped and can be found over the site. The objectif is to use the dataset to do explore some interesting insight of the NYC citibike user">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2015-03-23T19:16:01.000Z">
+<meta property="article:modified_time" content="2021-03-01T21:54:04.617Z">
+<meta property="article:author" content="Yi Jin">
+<meta property="article:tag" content="r">
+<meta property="article:tag" content="data science">
+<meta property="article:tag" content="open data">
+<meta property="article:tag" content="citibike">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://jinyi.me/2015/03/NYC-CitiBike-1-Data-Retrieval/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>NYC CitiBike [1] - Data Retrieval | Yi's Notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-44808321-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-44808321-2');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Yi's Notes</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">⟨Data Scientist|Photographer⟩</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#systeme-data-extract-transform-load"><span class="nav-number">1.</span> <span class="nav-text"> Systeme Data extract - transform - load</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data-extracting"><span class="nav-number">1.1.</span> <span class="nav-text"> Data extracting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-transforming"><span class="nav-number">1.2.</span> <span class="nav-text"> Data transforming</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-loading-saving"><span class="nav-number">1.3.</span> <span class="nav-text"> Data loading &amp; saving</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#getting-weather-data"><span class="nav-number">2.</span> <span class="nav-text"> Getting weather data</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yi Jin"
+      src="/./images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Yi Jin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://ca.linkedin.com/in/yjin88" title="LinkedIn → https:&#x2F;&#x2F;ca.linkedin.com&#x2F;in&#x2F;yjin88" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/rickyking" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rickyking" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://jinyi.me/2015/03/NYC-CitiBike-1-Data-Retrieval/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/./images/avatar.jpg">
+      <meta itemprop="name" content="Yi Jin">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yi's Notes">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NYC CitiBike [1] - Data Retrieval<a href="https://github.com/rickyking/rickyking.github.io/edit/source/source/_posts/_posts/2015-03-NYC-CitiBike-1-Data-Retrieval.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pen-nib"></i></a>
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2015-03-23 15:16:01" itemprop="dateCreated datePublished" datetime="2015-03-23T15:16:01-04:00">2015-03-23</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-03-01 16:54:04" itemprop="dateModified" datetime="2021-03-01T16:54:04-05:00">2021-03-01</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/R/" itemprop="url" rel="index"><span itemprop="name">R</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2015/03/NYC-CitiBike-1-Data-Retrieval/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/NYC-CitiBike-1-Data-Retrieval/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>New York city’s Citi Bike provides an <a target="_blank" rel="noopener" href="https://www.citibikenyc.com/system-data">open data</a>. All files are zipped and can be found over the site.</p>
+<p>The objectif is to use the dataset to do explore some interesting insight of the NYC citibike users’ usage patern.</p>
+<p>The current documentation is to make the data retrieval reproducible.</p>
+<p>The pipeline of data retrieval is:</p>
+<ol>
+<li>Scrapper the page which lists all the zip files</li>
+<li>Get the url of all the zip files</li>
+<li>Download the zip files and unzip</li>
+<li>Construct a data frame</li>
+<li>Due to large volume of data, the data is stored in SQLite and only subset a trunk</li>
+</ol>
+<p>The package required:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">library</span>(plyr)</span><br><span class="line"><span class="keyword">library</span>(weatherData)</span><br><span class="line"><span class="keyword">library</span>(dplyr)</span><br><span class="line"><span class="keyword">library</span>(stringr)</span><br><span class="line"><span class="keyword">library</span>(lubridate)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="systeme-data-extract-transform-load"><a class="markdownIt-Anchor" href="#systeme-data-extract-transform-load"></a> Systeme Data extract - transform - load</h2>
+<h3 id="data-extracting"><a class="markdownIt-Anchor" href="#data-extracting"></a> Data extracting</h3>
+<p>The data is downloaded via the site of <a target="_blank" rel="noopener" href="http://www.citibikenyc.com/system-data">citibikenyc.com</a>. We have the detailed information of the trips from july 2013 to december 2014. The data includes:</p>
+<ul>
+<li>Trip Duration (seconds)</li>
+<li>Start Time and Date</li>
+<li>Stop Time and Date</li>
+<li>Start Station Name</li>
+<li>End Station Name</li>
+<li>Station ID</li>
+<li>Station Lat/Long</li>
+<li>Bike ID</li>
+<li>User Type (Customer = 24-hour pass or 7-day pass user; Subscriber = Annual Member)</li>
+<li>Gender (Zero=unknown; 1=male; 2=female)</li>
+<li>Year of Birth</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install.packages(&quot;rvest&quot;)</span></span><br><span class="line"><span class="keyword">library</span>(rvest)</span><br><span class="line"></span><br><span class="line"><span class="comment"># httr::set_config(httr::config(httr::use_proxy(&quot;defrceprx01.ey.net&quot;, 8080)))</span></span><br><span class="line">page &lt;- html(<span class="string">&quot;https://www.citibikenyc.com/system-data&quot;</span>)</span><br><span class="line"></span><br><span class="line">URL_list &lt;- page %&gt;% html_nodes(<span class="string">&quot;#system-data a&quot;</span>) %&gt;% html_attr(<span class="string">&quot;href&quot;</span>)</span><br><span class="line"></span><br><span class="line">ind_zip &lt;- grep(<span class="string">&quot;zip&quot;</span>, URL_list)</span><br><span class="line"></span><br><span class="line">download_url &lt;- str_trim(URL_list[ind_zip])</span><br><span class="line"></span><br><span class="line">l_ply(download_url, <span class="keyword">function</span>(x) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!file.exists(paste0(getwd(),<span class="string">&quot;/input/raw/&quot;</span>, basename(x)))) &#123;</span><br><span class="line">        download.file(x, destfile=paste0(getwd(),<span class="string">&quot;/input/raw/&quot;</span>, basename(x)), method=<span class="string">&quot;curl&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">file2unzip &lt;- dir(<span class="string">&quot;input/raw&quot;</span>, full.names=<span class="literal">TRUE</span>)</span><br><span class="line">lapply(file2unzip, unzip, exdir=<span class="string">&quot;input/clean&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="data-transforming"><a class="markdownIt-Anchor" href="#data-transforming"></a> Data transforming</h3>
+<p>A script will try to retrieve the data from the site and unzip the zipped csv file. Once the files are downloaded and unzipped, the csv files will be read by <code>ldply</code> and create a aggregated data frame.</p>
+<p>Due to the size of the data, a SQLite database is created via script R by using package <code>dplyr</code> (this operation could be done by command line tool of SQLite).</p>
+<p>Some variables are also created in order to extract maximum information:</p>
+<ul>
+<li>convert start/end datetime into POXIct and extract information of “year”, “month”, “month day”, “week day”, “year day”, “hour”, “minute”, “second”, and “isoweek”</li>
+<li>calculate the age of the rider</li>
+<li>calculate the <code>direct</code> distance of each ride</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#           function</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line">isoyearweek &lt;- <span class="keyword">function</span> (x)</span><br><span class="line">&#123;</span><br><span class="line">  xday &lt;- ISOdate(year(x), month(x), day(x), tz = tz(x))</span><br><span class="line">  dn &lt;- <span class="number">1</span> + (wday(x) + <span class="number">5</span>)%%<span class="number">7</span></span><br><span class="line">  nth &lt;- xday + ddays(<span class="number">4</span> - dn)</span><br><span class="line">  jan1 &lt;- ISOdate(year(nth), <span class="number">1</span>, <span class="number">1</span>, tz = tz(x))</span><br><span class="line">  weeknum &lt;- <span class="number">1</span> + (nth - jan1)%/%ddays(<span class="number">7</span>)</span><br><span class="line">  isoyear &lt;- year(nth)</span><br><span class="line">  paste0(isoyear, sprintf(<span class="string">&quot;%02d&quot;</span>, weeknum))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#           find all unzip files</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line">file2read &lt;- dir(<span class="string">&quot;input/clean&quot;</span>, full.names=<span class="literal">TRUE</span>)</span><br><span class="line">file2read</span><br><span class="line"></span><br><span class="line"><span class="comment"># name2match &lt;- regexpr(&quot;[[:digit:]]+&quot;,file2read)</span></span><br><span class="line"><span class="comment"># regmatches(file2read, name2match)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#           read and construct data frame</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">dt_bike &lt;- ldply(file2read, <span class="keyword">function</span>(x) &#123;</span><br><span class="line">    dt &lt;- read.csv(x, encoding=<span class="string">&quot;UTF-8&quot;</span>, stringsAsFactors=<span class="literal">FALSE</span>)</span><br><span class="line">    cat(<span class="string">&quot;this is file: &quot;</span>, x, <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> (substr(dt$starttime[<span class="number">1</span>], <span class="number">1</span>, <span class="number">4</span>) %<span class="keyword">in</span>% seq(<span class="number">2013</span>, <span class="number">2016</span>, <span class="number">1</span>)) &#123;</span><br><span class="line">        dt$starttime_formated &lt;- as.POSIXct(dt$starttime, tz=<span class="string">&quot;UTC&quot;</span>, format=<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">        dt$stoptime_formated &lt;- as.POSIXct(dt$stoptime, tz=<span class="string">&quot;UTC&quot;</span>, format=<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        dt$starttime_formated &lt;- as.POSIXct(dt$starttime, tz=<span class="string">&quot;UTC&quot;</span>, format=<span class="string">&quot;%m/%d/%Y %H:%M:%S&quot;</span>)</span><br><span class="line">        dt$stoptime_formated &lt;- as.POSIXct(dt$stoptime, tz=<span class="string">&quot;UTC&quot;</span>, format=<span class="string">&quot;%m/%d/%Y %H:%M:%S&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    dt$year &lt;- year(dt$starttime_formated)</span><br><span class="line">        cat(<span class="string">&quot;Check: &quot;</span>, dt$year[<span class="number">1</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dt$month &lt;- month(dt$starttime_formated)</span><br><span class="line">        cat(<span class="string">&quot;Check: &quot;</span>, dt$month[<span class="number">1</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dt$isoyearweek &lt;- isoyearweek(dt$starttime_formated)</span><br><span class="line">    dt$mday &lt;- mday(dt$starttime_formated)</span><br><span class="line">    dt$wday &lt;- wday(dt$starttime_formated)</span><br><span class="line">    dt$yday &lt;- yday(dt$starttime_formated)</span><br><span class="line">        cat(<span class="string">&quot;Check: &quot;</span>, dt$day[<span class="number">1</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dt$hour &lt;- hour(dt$starttime_formated)</span><br><span class="line">        cat(<span class="string">&quot;Check: &quot;</span>, dt$hour[<span class="number">1</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dt$minute &lt;- minute(dt$starttime_formated)</span><br><span class="line">        cat(<span class="string">&quot;Check: &quot;</span>, dt$minute[<span class="number">1</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dt$second &lt;- second(dt$starttime_formated)</span><br><span class="line">        cat(<span class="string">&quot;Check: &quot;</span>, dt$second[<span class="number">1</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    dt$birth.year &lt;- as.numeric(dt$birth.year)</span><br><span class="line">        cat(<span class="string">&quot;Check: &quot;</span>, dt$birth.year[<span class="number">1</span>], <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span>(dt)</span><br><span class="line">&#125;, .progress=<span class="string">&quot;tk&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#           new variable</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line">dt_bike$age &lt;- dt_bike$year - dt_bike$birth.year</span><br><span class="line"></span><br><span class="line">distCalc &lt;- <span class="keyword">function</span>(p1, p2, r = <span class="number">6378137</span>)&#123;</span><br><span class="line">    <span class="comment"># browser()</span></span><br><span class="line">    toRad &lt;- pi/<span class="number">180</span></span><br><span class="line">    p1 &lt;- as.matrix(p1) * toRad</span><br><span class="line">    p2 &lt;- as.matrix(p2) * toRad</span><br><span class="line"></span><br><span class="line">    dLat &lt;- p2[, <span class="number">2</span>] - p1[, <span class="number">2</span>]</span><br><span class="line">    dLon &lt;- p2[, <span class="number">1</span>] - p1[, <span class="number">1</span>]</span><br><span class="line">    a &lt;- sin(dLat/<span class="number">2</span>) * sin(dLat/<span class="number">2</span>) + cos(p1[, <span class="number">2</span>]) * cos(p2[, <span class="number">2</span>]) *</span><br><span class="line">        sin(dLon/<span class="number">2</span>) * sin(dLon/<span class="number">2</span>)</span><br><span class="line">    dist &lt;- <span class="number">2</span> * atan2(sqrt(a), sqrt(<span class="number">1</span> - a)) * r</span><br><span class="line">    <span class="keyword">return</span>(dist)</span><br><span class="line">&#125;</span><br><span class="line">dt_bike$tripdistance &lt;- distCalc(cbind(dt_bike$start.station.longitude, dt_bike$start.station.latitude), cbind(dt_bike$end.station.longitude, dt_bike$end.station.latitude))</span><br><span class="line">dt_bike[<span class="number">1</span>,]</span><br><span class="line"></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#           save</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line"><span class="keyword">if</span> (!(file.exists(<span class="string">&quot;input/rds&quot;</span>))) dir.create(<span class="string">&quot;input/rds&quot;</span>)</span><br><span class="line">saveRDS(dt_bike, file=<span class="string">&quot;input/rds/dt_bike.rds&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="data-loading-saving"><a class="markdownIt-Anchor" href="#data-loading-saving"></a> Data loading &amp; saving</h3>
+<p>Once data is clean, we will the following code to construct a SQLite database in order to store the data and can be easily subset via <code>dplyr</code>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#           save df to sqlite</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">##----------------------------------------------------</span></span><br><span class="line">db_bike &lt;- src_sqlite(<span class="string">&quot;input/rds/dt_bike_clean.sqlite3&quot;</span>, create = <span class="literal">T</span>)</span><br><span class="line">db_bike</span><br><span class="line"></span><br><span class="line">bike_sqlite &lt;- copy_to(db_bike, dt_bike, temporary = <span class="literal">FALSE</span>,</span><br><span class="line">    indexes=list(c(<span class="string">&quot;year&quot;</span>, <span class="string">&quot;month&quot;</span>, <span class="string">&quot;mday&quot;</span>,<span class="string">&quot;wday&quot;</span>, <span class="string">&quot;hour&quot;</span>, <span class="string">&quot;minute&quot;</span>), <span class="string">&quot;start.station.id&quot;</span>, <span class="string">&quot;end.station.id&quot;</span>, <span class="string">&quot;bikeid&quot;</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="getting-weather-data"><a class="markdownIt-Anchor" href="#getting-weather-data"></a> Getting weather data</h2>
+<p>In order to make the data more explorable, we need to get more information of surrounding environment. Here we can find is weather.</p>
+<p>By using the pacakge <code>weatherData</code>, the whole year weather can be easily obtained.</p>
+<p>Here is the code to construct a data frame with weather information of new york city:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get new york city weather data for a year: KNYC (central park)</span></span><br><span class="line">required_day &lt;- seq(as.Date(<span class="string">&quot;2013-01-01&quot;</span>), as.Date(<span class="string">&quot;2014-12-31&quot;</span>), by =<span class="string">&quot;day&quot;</span>)</span><br><span class="line">required_day &lt;- as.character(required_day)</span><br><span class="line">dt_knyc_2013_2014 &lt;- ldply(required_day, <span class="keyword">function</span>(x) &#123;</span><br><span class="line">  getDetailedWeather(<span class="string">&quot;KNYC&quot;</span>, x, opt_all_columns=<span class="literal">TRUE</span>)</span><br><span class="line">&#125;, .progress=<span class="string">&quot;text&quot;</span>)</span><br><span class="line"></span><br><span class="line">str(dt_knyc_2013_2014)</span><br><span class="line">tail(dt_knyc_2013_2014)</span><br><span class="line"></span><br><span class="line">saveRDS(dt_knyc_2013_2014, file=<span class="string">&quot;input/rds/dt_knyc_2013_2014.rds&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/03/NYC-CitiBike-2-Data-Exploration/" rel="bookmark">NYC CitiBike [2] - Data Exploration</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/04/NYC-CitiBike-4-Model-Framework/" rel="bookmark">NYC CitiBike [4] - Model Framework</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/05/NYC-CitiBike-6-Application-R-Shiny/" rel="bookmark">NYC CitiBike [6] - Application R-Shiny</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/05/NYC-CitiBike-5-Modeling/" rel="bookmark">NYC CitiBike [5] - Modeling</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/04/NYC-CitiBike-3-More-Data-Exploration/" rel="bookmark">NYC CitiBike [3] - More Data Exploration</a></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/r/" rel="tag"># r</a>
+              <a href="/tags/data-science/" rel="tag"># data science</a>
+              <a href="/tags/open-data/" rel="tag"># open data</a>
+              <a href="/tags/citibike/" rel="tag"># citibike</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/03/Spark-Training-introduction/" rel="prev" title="Spark Training [introduction]">
+                  <i class="fa fa-chevron-left"></i> Spark Training [introduction]
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/03/NYC-CitiBike-2-Data-Exploration/" rel="next" title="NYC CitiBike [2] - Data Exploration">
+                  NYC CitiBike [2] - Data Exploration <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yi Jin</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+<script>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  const url = element.dataset.target;
+  const pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  const pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  const fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+  <script src="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.css">
+
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://starrynight88.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://jinyi.me/2015/03/NYC-CitiBike-1-Data-Retrieval/";
+    this.page.identifier = "2015/03/NYC-CitiBike-1-Data-Retrieval/";
+    this.page.title = "NYC CitiBike [1] - Data Retrieval";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://starrynight88.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

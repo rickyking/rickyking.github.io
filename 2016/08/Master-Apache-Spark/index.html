@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jinyi.me","root":"/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="A PDF version can be downloaded at the end of the article.   Spark essentials Advantages of Apache Spark:  Compatible with Hadoop Ease of development Fast Multiple language support Unified stack: Batc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Master Apache Spark">
+<meta property="og:url" content="http://jinyi.me/2016/08/Master-Apache-Spark/index.html">
+<meta property="og:site_name" content="Yi&#39;s Notes">
+<meta property="og:description" content="A PDF version can be downloaded at the end of the article.   Spark essentials Advantages of Apache Spark:  Compatible with Hadoop Ease of development Fast Multiple language support Unified stack: Batc">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2016-08-25T17:44:02.000Z">
+<meta property="article:modified_time" content="2021-03-01T21:54:04.713Z">
+<meta property="article:author" content="Yi Jin">
+<meta property="article:tag" content="data science">
+<meta property="article:tag" content="spark">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://jinyi.me/2016/08/Master-Apache-Spark/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Master Apache Spark | Yi's Notes</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-44808321-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-44808321-2');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Yi's Notes</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">⟨Data Scientist|Photographer⟩</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#spark-essentials"><span class="nav-number">1.</span> <span class="nav-text"> Spark essentials</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spark-components"><span class="nav-number">1.1.</span> <span class="nav-text"> Spark Components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#launch-spark-application"><span class="nav-number">1.2.</span> <span class="nav-text"> Launch Spark Application</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#general-operation"><span class="nav-number">2.</span> <span class="nav-text"> General operation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#read-files"><span class="nav-number">2.1.</span> <span class="nav-text"> Read files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transformations"><span class="nav-number">2.2.</span> <span class="nav-text"> Transformations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#actions"><span class="nav-number">2.3.</span> <span class="nav-text"> Actions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#different-types-of-rdd"><span class="nav-number">2.4.</span> <span class="nav-text"> Different Types of RDD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-frame"><span class="nav-number">2.5.</span> <span class="nav-text"> Data Frame</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stand-alone-application"><span class="nav-number">3.</span> <span class="nav-text"> Stand-alone Application</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pairrdd"><span class="nav-number">4.</span> <span class="nav-text"> PairRDD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#transformations-actions-in-rdd"><span class="nav-number">4.1.</span> <span class="nav-text"> Transformations &amp; Actions in RDD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#partition"><span class="nav-number">4.2.</span> <span class="nav-text"> Partition</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dataframes-in-spark"><span class="nav-number">5.</span> <span class="nav-text"> DataFrames in Spark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#create-dataframes-from-existing-rdd"><span class="nav-number">5.1.</span> <span class="nav-text"> Create DataFrames from existing RDD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loadingsaving-fromto-data-source"><span class="nav-number">5.2.</span> <span class="nav-text"> Loading&#x2F;saving from&#x2F;to data source</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transformations-actions"><span class="nav-number">5.3.</span> <span class="nav-text"> Transformations &amp; Actions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#user-defined-function-udf"><span class="nav-number">5.4.</span> <span class="nav-text"> User defined function (UDF)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#repartition-dataframe"><span class="nav-number">5.5.</span> <span class="nav-text"> Repartition DataFrame</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#monitor-spark-applications"><span class="nav-number">6.</span> <span class="nav-text"> Monitor Spark Applications</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#debug-and-tune-spark-applications"><span class="nav-number">6.1.</span> <span class="nav-text"> Debug and tune spark applications</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spark-streaming"><span class="nav-number">7.</span> <span class="nav-text"> Spark Streaming</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spark-streaming-architecture"><span class="nav-number">7.1.</span> <span class="nav-text"> Spark Streaming Architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#streaming-programing"><span class="nav-number">7.2.</span> <span class="nav-text"> Streaming Programing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#key-concept"><span class="nav-number">7.3.</span> <span class="nav-text"> Key Concept</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#window-operations"><span class="nav-number">7.4.</span> <span class="nav-text"> Window Operations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fault-tolerance"><span class="nav-number">7.5.</span> <span class="nav-text"> Fault tolerance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#graphx"><span class="nav-number">8.</span> <span class="nav-text"> GraphX</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#regular-directed-and-property-graphs"><span class="nav-number">8.1.</span> <span class="nav-text"> Regular, Directed, and Property Graphs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-property-graph"><span class="nav-number">8.2.</span> <span class="nav-text"> Create Property Graph</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#perform-operations-on-graph"><span class="nav-number">8.3.</span> <span class="nav-text"> Perform operations on graph</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spark-mllib"><span class="nav-number">9.</span> <span class="nav-text"> Spark MLlib</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yi Jin"
+      src="/./images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Yi Jin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://ca.linkedin.com/in/yjin88" title="LinkedIn → https:&#x2F;&#x2F;ca.linkedin.com&#x2F;in&#x2F;yjin88" rel="noopener" target="_blank"><i class="fab fa-linkedin fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/rickyking" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rickyking" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://jinyi.me/2016/08/Master-Apache-Spark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/./images/avatar.jpg">
+      <meta itemprop="name" content="Yi Jin">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yi's Notes">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Master Apache Spark<a href="https://github.com/rickyking/rickyking.github.io/edit/source/source/_posts/_posts/2016-08-Master-Apache-Spark.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pen-nib"></i></a>
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2016-08-25 13:44:02" itemprop="dateCreated datePublished" datetime="2016-08-25T13:44:02-04:00">2016-08-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-03-01 16:54:04" itemprop="dateModified" datetime="2021-03-01T16:54:04-05:00">2021-03-01</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spark/" itemprop="url" rel="index"><span itemprop="name">Spark</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2016/08/Master-Apache-Spark/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/Master-Apache-Spark/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><em>A PDF version can be downloaded at the end of the article.</em></p>
+<p><a name="spark-essentials"></a></p>
+<h2 id="spark-essentials"><a class="markdownIt-Anchor" href="#spark-essentials"></a> Spark essentials</h2>
+<p>Advantages of Apache Spark:</p>
+<ul>
+<li>Compatible with Hadoop</li>
+<li>Ease of development</li>
+<li>Fast</li>
+<li>Multiple language support</li>
+<li>Unified stack: Batch, Streaming, Interactive Analytics</li>
+</ul>
+<p>Transformation vs. Action:</p>
+<ul>
+<li>A transformation will return an RDD. Since RDD are immutable, the transformation will return a new RDD.</li>
+<li>An action will return a value.</li>
+</ul>
+<a id="more"></a>
+<p><a name="spark-components"></a></p>
+<h3 id="spark-components"><a class="markdownIt-Anchor" href="#spark-components"></a> Spark Components</h3>
+<ul>
+<li>The <strong>Spark core</strong> is a computational engine that is responsible for task scheduling, memory management, fault recovery and interacting with storage systems. The Spark core contains the functionality of Spark. It also contains the APIs that are used to define RDDs and manipulate them.</li>
+<li><strong>Spark SQL</strong> can be used for working with structured data. You can<br>
+query this data via SQL or HiveQL. Spark SQL supports many types of data sources such as structured Hive tables and complex JSON data.</li>
+<li><strong>Spark streaming</strong> enables processing of live streams of data and doing real-time analytics.</li>
+<li><strong>MLlib</strong> is a machine learning library that provides multiple types of machine learning algorithms such as classification, regression, clustering.</li>
+<li><strong>GraphX</strong> is a library for manipulating graphs and performing graph-parallel computations.</li>
+</ul>
+<p><a name="launch-spark-application"></a></p>
+<h3 id="launch-spark-application"><a class="markdownIt-Anchor" href="#launch-spark-application"></a> Launch Spark Application</h3>
+<p><strong>Local Mode</strong></p>
+<ul>
+<li>driver &amp; worker are in the same JVM</li>
+<li>RDD &amp; variable in same memory space</li>
+<li>No central master</li>
+<li>execution started by user</li>
+</ul>
+<p><strong>Standalone/Yarn Cluster Mode</strong></p>
+<ul>
+<li>the driver is launched from the worker process inside the cluster</li>
+<li>async,no wait</li>
+</ul>
+<p><strong>Standalone/Yarn Client Mode</strong></p>
+<ul>
+<li>the driver is launched in the client process that submitted the job</li>
+<li>sync, need to wait</li>
+</ul>
+<p><strong>MESOS replaces Spark Master as cluster Manager</strong> and provides two modes:</p>
+<ol>
+<li>Fine-grained mode: each task as a separate MESOS task; useful for sharing; start-up overhead</li>
+<li>coarse mode: launches only one long-running task; no sharing; no start-up overhead</li>
+</ol>
+<p><a name="general-operation"></a></p>
+<h2 id="general-operation"><a class="markdownIt-Anchor" href="#general-operation"></a> General operation</h2>
+<p>Spark provides <strong>Transformation &amp; Action</strong>, Transformation is lazily<br>
+evaluated.</p>
+<p><a name="read-files"></a></p>
+<h3 id="read-files"><a class="markdownIt-Anchor" href="#read-files"></a> Read files</h3>
+<ul>
+<li>Text files with one record per line &gt; <code>sc.textFile()</code></li>
+<li>SequenceFiles &gt; <code>sc.sequenceFile[K,V]</code></li>
+<li>Other Hadoop inputFormats &gt; <code>sc.hadoopRDD</code></li>
+<li>A (filename, content) pairs &gt; <code>sc.wholeTextFile</code></li>
+</ul>
+<p><a name="transformations"></a></p>
+<h3 id="transformations"><a class="markdownIt-Anchor" href="#transformations"></a> Transformations</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Map</td>
+<td>Returns new RDD by applying <code>func</code> to each element of source</td>
+</tr>
+<tr>
+<td>filter</td>
+<td>Returns new RDD consisting of elements from source on which function is true</td>
+</tr>
+<tr>
+<td>groupByKey</td>
+<td>Returns dataset (K,iterable) pairs on dataset of (K,V)</td>
+</tr>
+<tr>
+<td>reduceByKey</td>
+<td>Returns dataset (K,V) pairs where value for each key aggregated using the given reduce function</td>
+</tr>
+<tr>
+<td>flatMap</td>
+<td>return a sequence instead of single item</td>
+</tr>
+<tr>
+<td>distinct</td>
+<td>Returns new dataset containing distinct elements of source</td>
+</tr>
+</tbody>
+</table>
+<p><a name="actions"></a></p>
+<h3 id="actions"><a class="markdownIt-Anchor" href="#actions"></a> Actions</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>count()</td>
+<td>number of elements in the RDD</td>
+</tr>
+<tr>
+<td>reduce(func)</td>
+<td>Aggregate elements of RDD using <code>func</code></td>
+</tr>
+<tr>
+<td>collect()</td>
+<td>Returns all elements of RDD as an array to driver program</td>
+</tr>
+<tr>
+<td>take(n)</td>
+<td>Returns an array with first n elements</td>
+</tr>
+<tr>
+<td>first()</td>
+<td>Returns the first elements</td>
+</tr>
+<tr>
+<td>takeOrdered(n,[ordering])</td>
+<td>Return first n elements of RDD using natural order or custom operator</td>
+</tr>
+</tbody>
+</table>
+<p><a name="different-types-of-rdd"></a></p>
+<h3 id="different-types-of-rdd"><a class="markdownIt-Anchor" href="#different-types-of-rdd"></a> Different Types of RDD</h3>
+<ul>
+<li>ParallelCollectionRDD</li>
+<li>MapPartitionsRDD</li>
+<li>PairRDD</li>
+<li>CoGroupedRDD</li>
+<li>HadoopRDD</li>
+<li>ShuffledRDD</li>
+</ul>
+<p><strong>ParallelCollectionRDD</strong></p>
+<p><code>ParallelCollectionRDD</code> is an RDD of a collection of elements with <code>numSlices</code> partitions and optional <code>locationPrefs</code> =&gt; the result of <code>SparkContext.parallelize</code> and <code>SparkContext.makeRDD</code> methods.</p>
+<p><strong>MapPartitionsRDD</strong></p>
+<p><code>MapPartitionsRDD</code> is an RDD that applies the provided function <code>f</code> to every partition of the parent RDD.</p>
+<p>By default, it does not preserve partitioning — the last input parameter preservesPartitioning is false. If it is true, it retains the original RDD’s partitioning.</p>
+<p><code>MapPartitionsRDD</code> is the result of the following transformations:</p>
+<ul>
+<li><code>map</code></li>
+<li><code>flatMap</code></li>
+<li><code>filter</code></li>
+<li><code>glom</code></li>
+<li><code>mapPartitions</code></li>
+<li><code>mapPartitionsWithIndex</code></li>
+<li><code>PairRDDFunctions.mapValues</code></li>
+<li><code>PairRDDFunctions.flatMapValues</code></li>
+</ul>
+<p><strong>PairRDD</strong></p>
+<p>check <a href="#pairrdd">PairRDD</a></p>
+<p><strong>CoGroupedRDD</strong></p>
+<p>A RDD that cogroups its pair RDD parents. For each key k in parent RDDs, the resulting RDD contains a tuple with the list of values for that key.</p>
+<p>Use RDD.cogroup(…​) to create one.</p>
+<p><strong>HadoopRDD</strong></p>
+<p><code>HadoopRDD</code> is an RDD that provides core functionality for reading data stored in HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI using the older MapReduce API (org.apache.hadoop.mapred).</p>
+<p>HadoopRDD is created as a result of calling the following methods in SparkContext:</p>
+<ul>
+<li><code>hadoopFile</code></li>
+<li><code>textFile</code> (the most often used in examples!)</li>
+<li><code>sequenceFile</code></li>
+</ul>
+<p>Partitions are of type <code>HadoopPartition</code>.</p>
+<p><strong>ShuffledRDD</strong></p>
+<p><code>ShuffledRDD</code> is an RDD of (key, value) pairs. It is a shuffle step (the result RDD) for transformations that trigger shuffle at execution. Such transformations ultimately call <code>coalesce</code> transformation with shuffle input parameter <code>true</code> (default: <code>false</code>).</p>
+<p>It can be the result of RDD transformations using Scala implicits:</p>
+<ul>
+<li><code>repartitionAndSortWithinPartitions</code></li>
+<li><code>sortByKey</code></li>
+<li><code>partitionBy</code> (only when the input partitioner is different from the current one in an RDD)</li>
+<li><code>groupBy</code></li>
+</ul>
+<p><a name="data-frame"></a></p>
+<h3 id="data-frame"><a class="markdownIt-Anchor" href="#data-frame"></a> Data Frame</h3>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1. create sqlContext</span></span><br><span class="line"><span class="keyword">val</span> sqlContext = <span class="keyword">new</span> org.apache.spark.sql.<span class="type">SQLContext</span>(sc)</span><br><span class="line"><span class="comment">//2. used to convert RDD implicitly into a DataFrame</span></span><br><span class="line"><span class="keyword">import</span> sqlContext.implicits._</span><br><span class="line"><span class="comment">//3. define schema using a Case class</span></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">mySchema</span>(<span class="params">name1: type, name2: type</span>)</span></span><br><span class="line"><span class="class"><span class="title">//4</span>. <span class="title">create</span> <span class="title">the</span> <span class="title">RDD</span> <span class="title">first</span></span></span><br><span class="line"><span class="class"><span class="title">val</span> <span class="title">rdd=sc</span>.<span class="title">textFile</span>(<span class="params">&quot;../.csv&quot;</span>).<span class="title">map</span>(<span class="params">_.split(&quot;,&quot;</span>))</span></span><br><span class="line"><span class="class"><span class="title">//5</span>. <span class="title">Map</span> <span class="title">the</span> <span class="title">data</span> <span class="title">to</span> <span class="title">the</span> <span class="title">Auctions</span> <span class="title">Class</span></span></span><br><span class="line"><span class="class"><span class="title">val</span> <span class="title">mappedRDD</span> </span>= rdd.map(a=&gt;mySchema(a.(<span class="number">0</span>), a.(<span class="number">1</span>),...))</span><br><span class="line"><span class="comment">//6. convert RDD to dataframe</span></span><br><span class="line"><span class="keyword">val</span> df = mappedRDD.toDF()</span><br><span class="line"><span class="comment">//7. register the DF as a table</span></span><br><span class="line">df.registerTempTable(<span class="string">&quot;datatable&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>Commonly used actions for data frame</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>collect</td>
+<td>returns an array with all of rows in df</td>
+</tr>
+<tr>
+<td>count</td>
+<td>returns number of rows in the df</td>
+</tr>
+<tr>
+<td>describe(cols)</td>
+<td>computes statistics for numeric columns including <code>count</code>, <code>mean</code>, <code>stddev</code>, <code>min</code>, <code>max</code></td>
+</tr>
+<tr>
+<td>first(), head()</td>
+<td>returns first row</td>
+</tr>
+<tr>
+<td>show()</td>
+<td>displays the first 20 rows in tabular form</td>
+</tr>
+<tr>
+<td>take(n)</td>
+<td>returns the first n rows</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Commonly used functions for data frame</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cache()</td>
+<td>cache DF same as <code>persist(StorageLevel.MEMORY_ONLY)</code></td>
+</tr>
+<tr>
+<td>columns</td>
+<td>return all column names as an array</td>
+</tr>
+<tr>
+<td>explain()</td>
+<td>prints the physical plan to the console for debugging purposes</td>
+</tr>
+<tr>
+<td>printSchema()</td>
+<td>Print the schema to the console in a tree format</td>
+</tr>
+<tr>
+<td>registerTempTable(tableName)</td>
+<td>Registers this DF as a tempory table using the given name</td>
+</tr>
+<tr>
+<td>toDF()</td>
+<td>returns a new data frame</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Commonly used language integrated [transformation] queries</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agg(expr, exprs)</td>
+<td>Aggregates on the entire DF without groups</td>
+</tr>
+<tr>
+<td>distinct</td>
+<td>returns a new unique Dataframe</td>
+</tr>
+<tr>
+<td>filter(conditionExpr)</td>
+<td>filters based on given sql expression</td>
+</tr>
+<tr>
+<td>groupBy(col1, cols)</td>
+<td>groups DF using specified columns</td>
+</tr>
+<tr>
+<td>select(cols)</td>
+<td>selects a set of columns based on expressions</td>
+</tr>
+</tbody>
+</table>
+<p><a name="stand-alone-application"></a></p>
+<h2 id="stand-alone-application"><a class="markdownIt-Anchor" href="#stand-alone-application"></a> Stand-alone Application</h2>
+<p>Default project setting:</p>
+<ul>
+<li><code>project_name.sbt</code></li>
+<li><code>src/main/scala/source_name.scala</code></li>
+</ul>
+<p><strong>project_name.sbt example</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">name := <span class="string">&quot;Auctions Project&quot;</span></span><br><span class="line"></span><br><span class="line">version:= <span class="string">&quot;1.0&quot;</span></span><br><span class="line"></span><br><span class="line">scalaVersion := <span class="string">&quot;2.10.5&quot;</span></span><br><span class="line"></span><br><span class="line">libraryDependencies += <span class="string">&quot;org.apache.spark&quot;</span> %% <span class="string">&quot;spark-core&quot;</span> % <span class="string">&quot;1.6.1&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>source_name.scala example</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.<span class="type">SparkContext</span></span><br><span class="line"><span class="keyword">import</span> org.apache.spark.<span class="type">SparkContext</span>._</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.<span class="type">SparkConf</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">AuctionsApp</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args:<span class="type">Array</span>[<span class="type">String</span>])&#123;</span><br><span class="line">        <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">&quot;AuctionsApp&quot;</span>)</span><br><span class="line">        <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line">        <span class="keyword">val</span> aucFile = <span class="string">&quot;../../Downloads/data/auctiondata.csv&quot;</span></span><br><span class="line">        <span class="keyword">val</span> auctionRDD = sc.textFile(aucFile).map(_.split(<span class="string">&quot;,&quot;</span>)).cache()</span><br><span class="line">        <span class="keyword">val</span> totalnumber = auctionRDD.count()</span><br><span class="line">        println(<span class="string">&quot;totalnumber: %s&quot;</span>.format(totalnumber))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Once <code>sbt</code> installed, run <code>sbt package</code> in the root of project to compile the <code>jar</code>.</p>
+<p><a name="pairrdd"></a></p>
+<h2 id="pairrdd"><a class="markdownIt-Anchor" href="#pairrdd"></a> PairRDD</h2>
+<p>PairRDD: key-value Pairs &gt; <code>val pairRDD = RDD.map(data =&gt; (data(key), data(value)) )</code></p>
+<p>Many formats will directly return pairRDD: sequenceFiles create pairRDD, sc.wholeTextFile on small files creates pairRDD.</p>
+<p><a name="transformations--actions-in-rdd"></a></p>
+<h3 id="transformations-actions-in-rdd"><a class="markdownIt-Anchor" href="#transformations-actions-in-rdd"></a> Transformations &amp; Actions in RDD</h3>
+<ul>
+<li>Transformations specific to pairRDD
+<ul>
+<li><code>reduceByKey(func: (V, V) ⇒ V, numPartitions: Int): RDD[(K, V)]</code>: combines first locally then send at most one <code>V</code> per <code>K</code> to shuffle and reduce</li>
+<li><code>groupByKey(): RDD[(K, Iterable[V])]</code>: very expensive use following two instead, returns a key/value pairs where the value is an iterable list</li>
+<li><code>aggregateByKey[U](zeroValue: U)(seqOp: (U, V) ⇒ U, combOp: (U, U) ⇒ U)(implicit arg0: ClassTag[U]): RDD[(K, U)]</code>: given initial value <code>U</code>, first operation with <code>V</code>, then the result value <code>U</code> will be combined by <code>K</code>.</li>
+<li><code>combineByKey[C](createCombiner: (V) ⇒ C, mergeValue: (C, V) ⇒ C, mergeCombiners: (C, C) ⇒ C): RDD[(K, C)]</code>: transform <code>(K, V)</code> =&gt; <code>(K, C)</code> by <code>createCombiner</code> to transform each <code>V</code>, then <code>mergeValue</code> with <code>C</code> to be <code>C</code>, finally for each <code>K</code>, <code>mergeCombiners</code> to <code>C</code>.</li>
+<li><code>sortByKey(ascending: Boolean = true, numPartitions: Int = self.partitions.length): RDD[(K, V)]</code></li>
+</ul>
+</li>
+<li>Transformations that work on two pair RDD
+<ul>
+<li><code>join[W](other: RDD[(K, W)], numPartitions: Int): RDD[(K, (V, W))]</code>: inner join &gt; keep common <code>K</code> present</li>
+<li><code>cogroup[W](other: RDD[(K, W)], numPartitions: Int): RDD[(K, (Iterable[V], Iterable[W]))]</code>: full outer join &gt; keep all key</li>
+<li><code>subtractByKey()</code>: left subtract join &gt; only left without common key</li>
+<li><code>leftOuterJoin[W](other: RDD[(K, W)], numPartitions: Int): RDD[(K, (V, Option[W]))]</code></li>
+<li><code>rightOuterJoin[W](other: RDD[(K, W)], numPartitions: Int): RDD[(K, (Option[V], W))]</code></li>
+</ul>
+</li>
+<li>Transformations that apply to RDD as pairRDD, the input is <code>(K, V)</code>, so use <code>._1</code> to access the <code>K</code>, or <code>._2</code> to access the <code>V</code>
+<ul>
+<li><code>filter()</code></li>
+<li><code>map()</code></li>
+</ul>
+</li>
+<li>Traditional actions on RDD available to PairRDD
+<ul>
+<li><code>countByKey(): Map[K, Long]</code>: To handle very large results, consider using <code>rdd.mapValues(_ =&gt; 1L).reduceByKey(_ + _)</code>, which returns an <code>RDD[T, Long]</code> instead of a map &gt; a transformation</li>
+<li><code>collectAsMap(): Map[K, V]</code>: collect result as a map</li>
+<li><code>lookup(key: K): Seq[V]</code>: return all values associated with the provided key</li>
+</ul>
+</li>
+</ul>
+<p><a name="partition"></a></p>
+<h3 id="partition"><a class="markdownIt-Anchor" href="#partition"></a> Partition</h3>
+<ul>
+<li>The data within an RDD is split into several partitions.</li>
+<li>System groups elements based on a function of each key: set of keys appear together on the same node</li>
+<li>Each machine in cluster contains one or more partitions: number of partitions is at least as large as number of cores in the cluster</li>
+<li>Two kinds of partitioning: <strong>Hash Partitioning</strong>, <strong>Range Partitioning</strong></li>
+</ul>
+<p><strong>Hash Partitioner</strong></p>
+<p>Apply the hash partitioner to an RDD using the <code>partitionBy</code> transformation at the start of a program. It will shuffle all the data with the same key to the same worker.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> pair = rdd.map(x=&gt;(<span class="type">K</span>,<span class="type">V</span>))</span><br><span class="line"><span class="comment">//HashPartitioner(partitions: Int)</span></span><br><span class="line"><span class="keyword">val</span> hpart = <span class="keyword">new</span> <span class="type">HashPartitioner</span>(<span class="number">100</span>)</span><br><span class="line"><span class="keyword">val</span> partrdd2 = pair.partitionBy(hpart).persist()</span><br><span class="line"><span class="comment">// Result of partitionBy should be persisted to prevent partitioning from being applied each time the paritioned RDD is used</span></span><br></pre></td></tr></table></figure>
+<p><strong>Range Partitioner</strong></p>
+<p>The range partitioner will shuffle the data for keys in a range to the same workers especially a pair RDD that contains keys with an ordering defined.</p>
+<p><code>partitionBy(partitioner: Partitioner): RDD[(K, V)]</code>:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> pair = rdd.map(x=&gt;(<span class="type">K</span>,<span class="type">V</span>))</span><br><span class="line"><span class="comment">// RangePartitioner(partitions: Int, rdd: RDD[_ &lt;: Product2[K, V]], ascending: Boolean = true)(implicit arg0: Ordering[K], arg1: ClassTag[K])</span></span><br><span class="line"><span class="keyword">val</span> rpart = <span class="keyword">new</span> <span class="type">RangePartitioner</span>(<span class="number">4</span>, pair)</span><br><span class="line"><span class="keyword">val</span> partrdd1 = pair.partionBy(rpart).persist()</span><br><span class="line"><span class="comment">// Result of partitionBy should be persisted to prevent partitioning from being applied each time the paritioned RDD is used</span></span><br></pre></td></tr></table></figure>
+<p><strong>Specify partitions in transformations</strong></p>
+<p>Some operations accept additional argument: numPartitions or type of partitioner. Some operations automatically result in RDD with known partitioner: <code>sortByKey</code> -&gt; <code>RangePartitioner</code>; <code>groupByKey</code> -&gt; <code>HashPartitioner</code>.</p>
+<p>To change partitioning outside of aggregations and grouping operations:</p>
+<ul>
+<li><code>repartition(numPartitions: Int)(implicit ord: Ordering[T] = null): RDD[T]</code> shuffles data across network to create new set of partitions</li>
+<li><code>coalesce(numPartitions: Int, shuffle: Boolean = false)(implicit ord: Ordering[T] = null): RDD[T]</code> decreases the number of partitions, use <code>rdd.partition.size()</code> to determine the current number of partitions</li>
+</ul>
+<p><a name="dataframes-in-spark"></a></p>
+<h2 id="dataframes-in-spark"><a class="markdownIt-Anchor" href="#dataframes-in-spark"></a> DataFrames in Spark</h2>
+<p>SparkSQL is a library that runs on top of the Apache Spark Core and provides DataFrame API. The Spark DataFrames use a relational optimizer called the Catalyst optimizer.</p>
+<p>Spark DataFrame:</p>
+<ul>
+<li>is a programming abstraction in sparkSQL: a distributed collection of data organized into <em>named columns</em> and scales to PBs</li>
+<li>supports wide array of data formats &amp; storage systems, can be constructed from structured data files, tables in Hive, external databases or existing RDDs &gt; equivalent to a DB table but provides a much finer level of <em>optimization</em></li>
+<li>has API in scala, python, java and sparkR</li>
+</ul>
+<p><a name="create-dataframes-from-existing-rdd"></a></p>
+<h3 id="create-dataframes-from-existing-rdd"><a class="markdownIt-Anchor" href="#create-dataframes-from-existing-rdd"></a> Create DataFrames from existing RDD</h3>
+<p>Two ways:</p>
+<ul>
+<li>Infer schema by reflection
+<ul>
+<li>convert RDD containing case classes</li>
+<li>use when schema is known and under 22 columns - limitation of Case class</li>
+</ul>
+</li>
+<li>Construct schema programmatically
+<ul>
+<li>use to construct DF when columns and their types not known until runtime</li>
+<li>when the fields pass 22</li>
+</ul>
+</li>
+</ul>
+<p>Infer schema by reflection is best for the users who are going to see the same fields in the same way.</p>
+<p><strong>Infer schema by reflection</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1. import necessary class</span></span><br><span class="line"><span class="keyword">import</span> sqlContext._</span><br><span class="line"><span class="keyword">import</span> sqlContext.implicits._</span><br><span class="line"></span><br><span class="line"><span class="comment">//2. create RDD</span></span><br><span class="line"><span class="keyword">val</span> sfpdRDD = sc.textFile(<span class="string">&quot;/user/user01/data/sfpd.csv&quot;</span>).map(inc=&gt;inc.split(<span class="string">&quot;,&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">//3. define case class</span></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Incidents</span>(<span class="params">incidentnum:<span class="type">String</span>, category:<span class="type">String</span>, description:<span class="type">String</span>, dayofweek:<span class="type">String</span>, date:<span class="type">String</span>, time:<span class="type">String</span>, pddistrict:<span class="type">String</span>, resolution:<span class="type">String</span>, address:<span class="type">String</span>, <span class="type">X</span>:<span class="type">Float</span>, <span class="type">Y</span>:<span class="type">Float</span>, pdid:<span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">//4</span>. <span class="title">convert</span> <span class="title">the</span> <span class="title">RDD</span> <span class="title">into</span> <span class="title">an</span> <span class="title">RDD</span> <span class="title">of</span> <span class="title">case</span> <span class="title">objects</span> <span class="title">using</span> <span class="title">map</span></span></span><br><span class="line"><span class="class"><span class="title">val</span> <span class="title">sfpdCase=sfpdRDD</span>.<span class="title">map</span>(<span class="params">inc=&gt;<span class="type">Incidents</span>(inc(0</span>),<span class="title">inc</span>(<span class="params">1</span>), <span class="title">inc</span>(<span class="params">2</span>),<span class="title">inc</span>(<span class="params">3</span>),<span class="title">inc</span>(<span class="params">4</span>),<span class="title">inc</span>(<span class="params">5</span>),<span class="title">inc</span>(<span class="params">6</span>),<span class="title">inc</span>(<span class="params">7</span>),<span class="title">inc</span>(<span class="params">8</span>),<span class="title">inc</span>(<span class="params">9</span>).<span class="title">toFloat</span>,<span class="title">inc</span>(<span class="params">10</span>).<span class="title">toFloat</span>, <span class="title">inc</span>(<span class="params">11</span>)))</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">//5</span>. <span class="title">RDD</span> <span class="title">is</span> <span class="title">then</span> <span class="title">converted</span> <span class="title">to</span> <span class="title">DF</span></span></span><br><span class="line"><span class="class"><span class="title">val</span> <span class="title">sfpdDF=sfpdCase</span>.<span class="title">toDF</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">//6</span>. <span class="title">Registered</span> <span class="title">as</span> <span class="title">Table</span> <span class="title">for</span> <span class="title">enabling</span> <span class="title">SQL</span> <span class="title">query</span></span></span><br><span class="line"><span class="class"><span class="title">sfpdDF</span>.<span class="title">registerTempTable</span>(<span class="params">&quot;sfpd&quot;</span>)</span></span><br></pre></td></tr></table></figure>
+<p>In Python, no toDF or Case, just use <code>SQLContext.createDataFrame(data, schema=None, samplingRatio=None)</code> over RDD with:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>an RDD of Row/tuple/list/dict, list, or pandas.DataFrame.</td>
+</tr>
+<tr>
+<td>schema</td>
+<td>a StructType or list of column names. default None.</td>
+</tr>
+<tr>
+<td>samplingRatio</td>
+<td>the sample ratio of rows used for inferring</td>
+</tr>
+</tbody>
+</table>
+<p>Example in python:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sc is an existing SparkContext.</span></span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SQLContext, Row</span><br><span class="line">sqlContext = SQLContext(sc)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load a text file and convert each line to a Row.</span></span><br><span class="line">lines = sc.textFile(<span class="string">&quot;examples/src/main/resources/people.txt&quot;</span>)</span><br><span class="line">parts = lines.map(<span class="keyword">lambda</span> l: l.split(<span class="string">&quot;,&quot;</span>))</span><br><span class="line">people = parts.map(<span class="keyword">lambda</span> p: Row(name=p[<span class="number">0</span>], age=int(p[<span class="number">1</span>])))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Infer the schema, and register the DataFrame as a table.</span></span><br><span class="line">schemaPeople = sqlContext.createDataFrame(people)</span><br><span class="line">schemaPeople.registerTempTable(<span class="string">&quot;people&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>Construct schema Programmatically</strong></p>
+<ol>
+<li>Create an RDD of <code>Rows</code> from the original RDD</li>
+<li>Create the schema represented by a <code>StructType</code> matching the structure of Rows in the RDD created in Step 1: <code>StructType(Array(StructField(name, dataType, nullable),...))</code></li>
+<li>Apply the schema to the RDD of <code>Row</code>s via <code>createDataFrame</code> method provided by <code>SQLContext</code></li>
+</ol>
+<p>Example:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sc is an existing SparkContext.</span></span><br><span class="line"><span class="keyword">val</span> sqlContext = <span class="keyword">new</span> org.apache.spark.sql.<span class="type">SQLContext</span>(sc)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create an RDD</span></span><br><span class="line"><span class="keyword">val</span> people = sc.textFile(<span class="string">&quot;examples/src/main/resources/people.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// The schema is encoded in a string</span></span><br><span class="line"><span class="keyword">val</span> schemaString = <span class="string">&quot;name age&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Import Row.</span></span><br><span class="line"><span class="keyword">import</span> org.apache.spark.sql.<span class="type">Row</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Import Spark SQL data types</span></span><br><span class="line"><span class="keyword">import</span> org.apache.spark.sql.types.&#123;<span class="type">StructType</span>,<span class="type">StructField</span>,<span class="type">StringType</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate the schema based on the string of schema</span></span><br><span class="line"><span class="keyword">val</span> schema = <span class="type">StructType</span>(</span><br><span class="line">    schemaString.split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">                .map(fieldName =&gt; <span class="type">StructField</span>(fieldName, <span class="type">StringType</span>, <span class="literal">true</span>))</span><br><span class="line">                )</span><br><span class="line"></span><br><span class="line"><span class="comment">// Convert records of the RDD (people) to Rows.</span></span><br><span class="line"><span class="keyword">val</span> rowRDD = people.map(_.split(<span class="string">&quot;,&quot;</span>)).map(p =&gt; <span class="type">Row</span>(p(<span class="number">0</span>), p(<span class="number">1</span>).trim))</span><br><span class="line"></span><br><span class="line"><span class="comment">// Apply the schema to the RDD.</span></span><br><span class="line"><span class="keyword">val</span> peopleDataFrame = sqlContext.createDataFrame(rowRDD, schema)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Register the DataFrames as a table.</span></span><br><span class="line">peopleDataFrame.registerTempTable(<span class="string">&quot;people&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>In Python:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import SQLContext and data types</span></span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SQLContext</span><br><span class="line"><span class="keyword">from</span> pyspark.sql.types <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># sc is an existing SparkContext.</span></span><br><span class="line">sqlContext = SQLContext(sc)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load a text file and convert each line to a tuple.</span></span><br><span class="line">lines = sc.textFile(<span class="string">&quot;examples/src/main/resources/people.txt&quot;</span>)</span><br><span class="line">parts = lines.map(<span class="keyword">lambda</span> l: l.split(<span class="string">&quot;,&quot;</span>))</span><br><span class="line">people = parts.map(<span class="keyword">lambda</span> p: (p[<span class="number">0</span>], p[<span class="number">1</span>].strip()))</span><br><span class="line"></span><br><span class="line"><span class="comment"># The schema is encoded in a string.</span></span><br><span class="line">schemaString = <span class="string">&quot;name age&quot;</span></span><br><span class="line"></span><br><span class="line">fields = [StructField(field_name, StringType(), <span class="literal">True</span>) <span class="keyword">for</span> field_name <span class="keyword">in</span> schemaString.split()]</span><br><span class="line">schema = StructType(fields)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Apply the schema to the RDD.</span></span><br><span class="line">schemaPeople = sqlContext.createDataFrame(people, schema)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Register the DataFrame as a table.</span></span><br><span class="line">schemaPeople.registerTempTable(<span class="string">&quot;people&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://endymecy.gitbooks.io/spark-programming-guide-zh-cn/content/spark-sql/spark-sql-dataType-reference.html">SQL data types reference</a></p>
+<p><a name="loadingsaving-fromto-data-source"></a></p>
+<h3 id="loadingsaving-fromto-data-source"><a class="markdownIt-Anchor" href="#loadingsaving-fromto-data-source"></a> Loading/saving from/to data source</h3>
+<ul>
+<li>Read: <code>sqlContext.read.format(&quot;format&quot;).load(&quot;filename.extension&quot;)</code></li>
+<li>Write: <code>sqlContext.write.format(&quot;format&quot;).save(&quot;filename.extension&quot;)</code></li>
+<li>to JDBC: <code>sqlContext.write.jdbc(url: String, table: String, connectionProperties: Properties): Unit</code></li>
+<li>format: <code>json</code>, <code>parquet</code>, <code>json</code></li>
+</ul>
+<p><a name="transformations--actions"></a></p>
+<h3 id="transformations-actions"><a class="markdownIt-Anchor" href="#transformations-actions"></a> Transformations &amp; Actions</h3>
+<p><strong>Actions</strong></p>
+<ul>
+<li><code>collect()</code></li>
+<li><code>count()</code></li>
+<li><code>describe(cols:String*)</code></li>
+</ul>
+<p><strong>Functions</strong></p>
+<ul>
+<li><code>cache()</code></li>
+<li><code>columns</code></li>
+<li><code>printSchema()</code></li>
+</ul>
+<p><strong>Language integrated queries</strong></p>
+<ul>
+<li><code>agg(expr, exprs)</code>: aggregates on entire DF or <code>groupBy(df.name).agg(exprs)</code> by <code>df.name</code></li>
+<li><code>distinct</code></li>
+<li><code>except(other)</code>: returns new DF with rows from this DF not in <code>other</code> DF</li>
+<li><code>filter(expr)</code>: filter based on the SQL expression or condition</li>
+<li><code>sort($&quot;col1&quot;, $&quot;col2&quot;.desc)</code>: sort the column(s)</li>
+</ul>
+<p><a name="user-defined-function-udf"></a></p>
+<h3 id="user-defined-function-udf"><a class="markdownIt-Anchor" href="#user-defined-function-udf"></a> User defined function (UDF)</h3>
+<ul>
+<li>In Spark, UDF can be defined inline, no need for registration</li>
+<li>No complicated registration or packaging process</li>
+<li>2 types of UDF
+<ul>
+<li>to use with Scala DSL (with Data Frame Operations)</li>
+<li>to use with SQL</li>
+</ul>
+</li>
+</ul>
+<p><strong>User Defined functions in (Scala DSL Domain Specific Language)</strong></p>
+<p>In scala use <code>org.apache.spark.sql.functions.udf((arguments)=&gt;&#123;function definition&#125;)</code>:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Defined a UDF that returns true or false based on some numeric score.</span></span><br><span class="line"><span class="keyword">val</span> predict = udf((score: <span class="type">Double</span>) =&gt; <span class="keyword">if</span> (score &gt; <span class="number">0.5</span>) <span class="literal">true</span> <span class="keyword">else</span> <span class="literal">false</span>)</span><br><span class="line"><span class="comment">// Projects a column that adds a prediction column based on the score column.</span></span><br><span class="line">df.select( predict(df(<span class="string">&quot;score&quot;</span>)) )</span><br></pre></td></tr></table></figure>
+<p>In python use <code>pyspark.sql.functions.udf(f, returnType=StringType)</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.types <span class="keyword">import</span> IntegerType</span><br><span class="line">slen = udf(<span class="keyword">lambda</span> s: len(s), IntegerType())</span><br><span class="line">df.select(slen(df.name).alias(<span class="string">&#x27;slen&#x27;</span>)).collect()</span><br><span class="line"><span class="comment">##[Row(slen=5), Row(slen=3)]</span></span><br></pre></td></tr></table></figure>
+<p><strong>User defined functions in SQL query</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Option 1</span></span><br><span class="line"><span class="comment">// First define a function (funcname)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">funcname</span></span></span><br><span class="line"><span class="function"><span class="title">//funcname</span> <span class="title">_</span> <span class="title">turns</span> <span class="title">the</span> <span class="title">function</span> <span class="title">into</span> <span class="title">a</span> <span class="title">partially</span> <span class="title">applied</span> <span class="title">function</span> <span class="title">that</span> <span class="title">can</span> <span class="title">be</span> <span class="title">passed</span> <span class="title">to</span> <span class="title">register</span></span></span><br><span class="line"><span class="function"><span class="title">sqlContext</span>.<span class="title">udf</span>.<span class="title">register</span></span>(<span class="string">&quot;func_udf&quot;</span>, funcname _)</span><br><span class="line"><span class="comment">// Option 2</span></span><br><span class="line"><span class="comment">// or inline definition</span></span><br><span class="line">sqlContext.udf.register(<span class="string">&quot;func_udf&quot;</span>, func <span class="function"><span class="keyword">def</span>)</span></span><br></pre></td></tr></table></figure>
+<p>N.B. The underscore tells scala that we don’t know the parameter yet but want the function as a value. The required parameter will be supplied later.</p>
+<p><a name="repartition-dataframe"></a></p>
+<h3 id="repartition-dataframe"><a class="markdownIt-Anchor" href="#repartition-dataframe"></a> Repartition DataFrame</h3>
+<p>The partition of DF is set by default in <code>spark.sql.shuffle.partitions</code> as value 200, and can be change by <code>sqlContext.setConf(key, value)</code>, i.e. <code>sqlContext.setConf(&quot;spark.sql.shuffle.partitions&quot;, partitionNumber: Int)</code>.</p>
+<p>Repartition is possible by <code>df.repartition(numPartitions: Int)</code>, and the number of partitions can be determined by <code>df.rdd.partitions.size</code>.</p>
+<p>Best practices:</p>
+<ul>
+<li>each partition to be 50 MB - 200 MB</li>
+<li>small dataset is ok to have few partitions</li>
+<li>large cluster with 100 nodes should have at least 100 partitions, e.g. 100 nodes with 10 slots in each executor require 1000 partitions to use all executor slots.</li>
+</ul>
+<p><a name="monitor-spark-applications"></a></p>
+<h2 id="monitor-spark-applications"><a class="markdownIt-Anchor" href="#monitor-spark-applications"></a> Monitor Spark Applications</h2>
+<p>A <strong>RDD Lineage Graph</strong> (aka RDD operator graph) is a graph of all the parent RDDs of a RDD, is built as a result of applying transformations to the RDD and creates a <em>logical execution plan</em>: <code>rdd.toDebugString()</code> will return the lineage for an RDD.</p>
+<p>No <strong>calculation</strong> is performed until an <em>action</em> while the lazy evaluation creates a <strong>Directed Acyclic Graph (DAG)</strong>.</p>
+<p>While applying an <strong>action</strong>, the scheduler outputs a computation stage for each RDD in the DAG. If an RDD can be computed from its parent <strong>without</strong> movement of Data, they are collapsed into a single stage referred as <strong>pipelining</strong>.</p>
+<p>Situations when lineage truncated as usually the number of jobs equal to the number of RDDs in DAG:</p>
+<ol>
+<li><strong>Pipelining</strong></li>
+<li>RDD <strong>persisted</strong> in cluster memory or disk</li>
+<li>RDD materialized due to earlier <strong>shuffle</strong>: since shuffle outputs in Spark are written to disk =&gt; <em>Built-in optimization</em></li>
+</ol>
+<p>When an <strong>action</strong> is encountered, the <strong>DAG</strong> is translated into a <strong>physical plan</strong> to compute the RDDs needed for performing the <strong>action</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Components</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tasks</td>
+<td>unit of work within a stage</td>
+</tr>
+<tr>
+<td>stages</td>
+<td>group of tasks</td>
+</tr>
+<tr>
+<td>shuffle</td>
+<td>transfer of data between stages</td>
+</tr>
+<tr>
+<td>jobs</td>
+<td>work required to compute RDD, has one or more stages</td>
+</tr>
+<tr>
+<td>pipelining</td>
+<td>collapsing of RDDs into a single stage when RDD transformations can be computed without data movement</td>
+</tr>
+<tr>
+<td>DAG</td>
+<td>Directed Acyclic Graph: Logical graph of RDD operations</td>
+</tr>
+<tr>
+<td>RDD</td>
+<td>Resilient Distributed Dataset: Parallel dataset with partitions</td>
+</tr>
+</tbody>
+</table>
+<p>Phases during Spark Execution:</p>
+<ol>
+<li>User code defines the DAG</li>
+<li>Actions responsible for translating DAG to physical execution plan</li>
+<li>Tasks scheduled and executed on cluster</li>
+</ol>
+<p><a name="debug-and-tune-spark-applications"></a></p>
+<h3 id="debug-and-tune-spark-applications"><a class="markdownIt-Anchor" href="#debug-and-tune-spark-applications"></a> Debug and tune spark applications</h3>
+<ul>
+<li><strong>Skewed</strong> partition: some partition(s) take more time than others.</li>
+<li>Node Problem: some node(s) have issues</li>
+</ul>
+<p>Common issues leading to slow performance:</p>
+<ul>
+<li>the level of <strong>parallelism</strong>: tune the level of parallelism by <code>numPartitions</code> in the shuffle ops or <code>repartitions()</code>, <code>coalesce()</code></li>
+<li>the <strong>serialization format</strong> used during shuffle operations:
+<ul>
+<li>Spark serializes data during data transfer thus shuffle operations</li>
+<li>java built in serializer is default, <em>Kryo</em> serialization is often more efficient</li>
+</ul>
+</li>
+<li>managing <strong>memory</strong> to optimize your application:
+<ul>
+<li>60% <em>RDD storage</em> vs. 20% <em>Shuffle</em> vs. 20% <em>user program</em></li>
+<li>Refer to <a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/programming-guide.html#rdd-persistence">persist options</a></li>
+<li><code>MEMORY_ONLY_SER</code> will cut down on garbage collection -&gt; serialized in memory cache.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Best Practices and Tips</strong></p>
+<ol>
+<li>avoid shuffling large amounts of data: <code>aggregateByKey</code> for aggregations, <code>reduceByKey</code> | <code>combineByKey</code> | <code>foldByKey</code> instead of <strong>heavy shuffle</strong> <code>groupByKey</code></li>
+<li>do not copy all elements of RDD to driver: not <code>collect()</code> every time</li>
+<li>filter sooner than later</li>
+<li>many idle tasks (~10k) -&gt; <code>coalesce()</code></li>
+<li>not using all slots in cluster -&gt; <code>repartition()</code> up</li>
+</ol>
+<p><a name="spark-streaming"></a></p>
+<h2 id="spark-streaming"><a class="markdownIt-Anchor" href="#spark-streaming"></a> Spark Streaming</h2>
+<p><a name="spark-streaming-architecture"></a></p>
+<h3 id="spark-streaming-architecture"><a class="markdownIt-Anchor" href="#spark-streaming-architecture"></a> Spark Streaming Architecture</h3>
+<ol>
+<li>Data stream divided into batches</li>
+<li>Process data using transformations</li>
+<li>Output operations push data out in batches</li>
+</ol>
+<p><a name="streaming-programing"></a></p>
+<h3 id="streaming-programing"><a class="markdownIt-Anchor" href="#streaming-programing"></a> Streaming Programing</h3>
+<p><strong>Create Streaming Context</strong></p>
+<p>A. Existing <code>SparkContext sc</code>:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark._</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.streaming._</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(appName).setMaster(master)</span><br><span class="line"><span class="keyword">val</span> ssc = <span class="keyword">new</span> <span class="type">StreamingContext</span>(conf, <span class="type">Seconds</span>(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>B. Existing <code>SparkConf conf</code></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.streaming._</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> sc = ...                <span class="comment">// existing SparkContext</span></span><br><span class="line"><span class="keyword">val</span> ssc = <span class="keyword">new</span> <span class="type">StreamingContext</span>(sc, <span class="type">Seconds</span>(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p><em>N.B.: the second parameter is <code>batchDuration</code> the time interval at which streaming data divided into batches.</em></p>
+<p><strong>After a context is defined, you have to do the following:</strong></p>
+<ol>
+<li>Define the input sources by creating input DStreams</li>
+<li>Define the streaming computations by applying transformation and output operations to DStreams</li>
+<li>Start receiving data and processing it using <code>streamingContext.start()</code></li>
+<li>Wait for the processing to be stopped (manually or due to any error) using <code>streamingContext.awaitTermination()</code></li>
+<li>The processing can be manually stopped using <code>streamingContext.stop()</code>, add <code>stopSparkContext=false</code> not to stop <code>sparkContext</code></li>
+</ol>
+<p><a name="key-concept"></a></p>
+<h3 id="key-concept"><a class="markdownIt-Anchor" href="#key-concept"></a> Key Concept</h3>
+<ul>
+<li>Data sources:
+<ul>
+<li>File based: HDFS</li>
+<li>Network based: TCP sockets</li>
+<li>Twitter, Kafka, Flume, ZeroMQ, Akka Actor</li>
+</ul>
+</li>
+<li>Transformations: create new DStream &gt; <a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/streaming-programming-guide.html#transformations-on-dstreams">cf.</a>
+<ul>
+<li>Standard RDD operations: <code>map</code>, <code>countByValue</code>,…</li>
+<li><a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/streaming-programming-guide.html#updatestatebykey-operation">Stateful operations</a>: <code>UpdateStateByKey(function)</code>,…</li>
+</ul>
+</li>
+<li>Output operations: trigger computation
+<ul>
+<li><code>print</code>: prints first 10 elements</li>
+<li><code>saveAsObjectFile</code>, <code>saveAsTextFiles</code>, <code>saveAsHadoopFiles</code>: save to HDFS</li>
+<li><code>forEachRDD</code>: do anything with each batch of RDDs</li>
+</ul>
+</li>
+</ul>
+<p><a name="window-operations"></a></p>
+<h3 id="window-operations"><a class="markdownIt-Anchor" href="#window-operations"></a> Window Operations</h3>
+<ul>
+<li>Apply transformations over a sliding window of Data</li>
+<li>window length [duration of the window] vs.[normally &gt; ] sliding interval [interval of operation]</li>
+<li><a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/streaming-programming-guide.html#window-operations">cf.</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Window Operation</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>window(windowLength, slideInterval)</td>
+<td>Returns new DStream Computed based on windowed batches of source DStream</td>
+</tr>
+<tr>
+<td>countByWindow(windowLength, slideInterval)</td>
+<td>Returns a sliding window count of elements in the stream</td>
+</tr>
+<tr>
+<td>reduceByWindow(func, windowLength, slideInterval)</td>
+<td>Returns a new single-element stream created by aggregating elements over sliding interval using <code>func</code></td>
+</tr>
+<tr>
+<td>reduceByKeyAndWindow(func, windowLenght, slideInvterval, [numTasks])</td>
+<td>Returns a new DStream of (K,V) pairs from DStream of (K,V) pairs; aggregates using given reduce function <code>func</code> over batches of sliding window</td>
+</tr>
+<tr>
+<td>countByValueAndWindow(windowLength, slideInterval, [numTasks])</td>
+<td>Returns new DStream of (K,V) paris where value of each key is its frequency within a sliding window; it acts on DStreams of (K,V) pairs</td>
+</tr>
+</tbody>
+</table>
+<p><a name="fault-tolerance"></a></p>
+<h3 id="fault-tolerance"><a class="markdownIt-Anchor" href="#fault-tolerance"></a> Fault tolerance</h3>
+<p>Fault Tolerance in <strong>Spark RDDs</strong></p>
+<ul>
+<li>RDD is immutable</li>
+<li>Each RDD remembers lineage</li>
+<li>if RDD partition is lost due to worker node failure, partition recomputed</li>
+<li>Data in final transformed RDD always the same provided the RDD transformation are deterministic</li>
+<li>Data comes from fault-tolerant systems -&gt; RDDs from fault-tolerant data are also fault tolerant</li>
+</ul>
+<p>Fault Tolerance in <strong>Spark Streaming</strong></p>
+<ul>
+<li>Spark Streaming launches receivers within an executor for each input source. The receiver receives input data that is saved as RDDs and then replicated to other executors for fault tolerance. The default replication for each input source is 2.</li>
+<li>The data is stored in memory as cached RDDs.</li>
+<li>If instead the node with the receiver fails, then there may be a loss of data that was received by the system but not yet replicated to other nodes. The receiver will be started on a different node.</li>
+<li>Write Ahead Logs (WAL), when enabled, all of the received data is saved to log files in a fault tolerant system, and sends acknowledgment of receipt, to protect against receiver failure.</li>
+</ul>
+<p><strong>Checkpointing</strong></p>
+<ul>
+<li>Provides fault tolerance for driver</li>
+<li>Periodically saves data to fault tolerant system</li>
+<li>Two types of check pointing:
+<ul>
+<li>Metadata &gt; for recovery from driver failures</li>
+<li>Data checkpointing &gt; for basic functioning if using stateful transformations</li>
+</ul>
+</li>
+<li>Enable checkpointing &gt; <code>ssc.checkpoint(&quot;hdfs://...&quot;)</code></li>
+<li>If you use sliding windows, you need to enable checkpointing</li>
+</ul>
+<p><a name="graphx"></a></p>
+<h2 id="graphx"><a class="markdownIt-Anchor" href="#graphx"></a> GraphX</h2>
+<p>A way to represent a set of <em>vertices</em> that may be connected by <em>edges</em>.</p>
+<p>Apache Spark GraphX:</p>
+<ul>
+<li>Spark component for graphs and graph-parallel computations</li>
+<li>Combines data parallel and graph parallel processing using in <em>single API</em></li>
+<li>View data as graphs and as collections (RDD) &gt; without the need for duplication or movement of data</li>
+<li>Operations for graph computation</li>
+<li>Provides graph algorithms and builders</li>
+</ul>
+<p><a name="regular-directed-and-property-graphs"></a></p>
+<h3 id="regular-directed-and-property-graphs"><a class="markdownIt-Anchor" href="#regular-directed-and-property-graphs"></a> Regular, Directed, and Property Graphs</h3>
+<p><strong>Regular Graph</strong>: graph where each vertex has the same number of edges, e.g. users on Facebook.</p>
+<p><strong>Directed Graph</strong>: graph in which edges run in one direction from one vertex to another, e.g. Twitter follower.</p>
+<p><strong>Property graph</strong>: the primary abstraction of Spark GraphX; a directed multigraph which can have multiple edges in parallel； every edge and vertex has user defined properties associated with it, and therefore is unique &gt; immutable, distributed and fault-tolerant. Characteristics:</p>
+<ol>
+<li>Edges and vertices have user-defined properties associated with them</li>
+<li>Property graphs are directional</li>
+<li>Every edge and vertex is unique</li>
+<li>Property graphs are immutable</li>
+</ol>
+<p><a name="create-property-graph"></a></p>
+<h3 id="create-property-graph"><a class="markdownIt-Anchor" href="#create-property-graph"></a> Create Property Graph</h3>
+<p>Step 1. Import required classes</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark._</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.graphx._</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.rdd.<span class="type">RDD</span></span><br></pre></td></tr></table></figure>
+<p>Step 2. Create vertex RDD</p>
+<p>Vertex RDD is a tuple with a vertex ID, followed by an array of the properties of the vertex &gt; <code>tuple(vertexID,case(properties))</code></p>
+<p>Step 3. Create edge RDD</p>
+<p>An edge in a property graph will have the source ID, destination ID and properties &gt; <code>tuple((srcID,dstID),case(properties))</code> then construct <code>Edge(srcID, destID, case(properties))</code>.</p>
+<p>Step 4. Create graph</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> graph = <span class="type">Graph</span>(vertexRDD, edgeRDD, defaultVertex)</span><br></pre></td></tr></table></figure>
+<p><a name="perform-operations-on-graph"></a></p>
+<h3 id="perform-operations-on-graph"><a class="markdownIt-Anchor" href="#perform-operations-on-graph"></a> Perform operations on graph</h3>
+<p>Graph Operators</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Operator</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Info</td>
+<td>numEdges</td>
+<td>number of edges (Long)</td>
+</tr>
+<tr>
+<td>Info</td>
+<td>numVertices</td>
+<td>number of vertices (Long)</td>
+</tr>
+<tr>
+<td>Info</td>
+<td>inDegrees</td>
+<td>The in-degree of each vertex (VertexRDD(int))</td>
+</tr>
+<tr>
+<td>Info</td>
+<td>outDegrees</td>
+<td>The out-degree of each vertex (VertexRDD(int))</td>
+</tr>
+<tr>
+<td>Info</td>
+<td>Degrees</td>
+<td>The degree of each vertex (VertexRDD(int))</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>cache()</td>
+<td>caches <code>MEMORY_ONLY</code></td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>persist(newLevel)</td>
+<td>caches <code>newLevel</code></td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>vertices</td>
+<td>An RDD containing the vertices and associated attributes</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>edges</td>
+<td>An RDD containing the edges and associated attributes</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>triplets</td>
+<td>An RDD containing the edges and associated attributes &gt; <code>RDD[EdgeTriplet[VD, ED]]</code></td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>subgraph(epred, vpred)</td>
+<td>Restricts graph to only vertices and edges satisfying the predicates</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>reverse</td>
+<td>Reverses all edges in the graph</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>mask</td>
+<td>The mask operator constructs a subgraph by returning a graph that contains the vertices and edges that are also found in the input graph</td>
+</tr>
+<tr>
+<td>Property</td>
+<td>mapVertices</td>
+<td>Transforms each vertex attribute using map function</td>
+</tr>
+<tr>
+<td>Property</td>
+<td>mapEdges</td>
+<td>Transforms each edge attribute, a partition at a time, using map function - does <em>not</em> pass the vertex value to the edge</td>
+</tr>
+<tr>
+<td>Property</td>
+<td>mapTriplets</td>
+<td>Transforms each edge attribute, a partition at a time, using map function - does pass the vertex value to the edge</td>
+</tr>
+</tbody>
+</table>
+<p>In addition to the vertex and edge views of the property graph, GraphX also exposes a triplet view. The triplet view logically joins the vertex and edge properties yielding an <code>RDD[EdgeTriplet[VD, ED]]</code> containing instances of the EdgeTriplet class. This join can be expressed in the following SQL expression:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> src.id, dst.id, src.attr, e.attr, dst.attr</span><br><span class="line"><span class="keyword">FROM</span> edges <span class="keyword">AS</span> e <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> vertices <span class="keyword">AS</span> src, vertices <span class="keyword">AS</span> dst</span><br><span class="line"><span class="keyword">ON</span> e.srcId = src.Id <span class="keyword">AND</span> e.dstId = dst.Id</span><br></pre></td></tr></table></figure>
+<p><a name="spark-mllib"></a></p>
+<h2 id="spark-mllib"><a class="markdownIt-Anchor" href="#spark-mllib"></a> Spark MLlib</h2>
+<table>
+<thead>
+<tr>
+<th>Algorithms and Utilities</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Basic statistics</td>
+<td>summary statistics, correlations, hypothesis testing, random data generation</td>
+</tr>
+<tr>
+<td>classification and regression</td>
+<td>linear models, decision trees, Naive Bayes</td>
+</tr>
+<tr>
+<td>Collaborative filtering</td>
+<td>model-based collaborative filtering using alternating least squares (ALS) algorithm</td>
+</tr>
+<tr>
+<td>Clustering</td>
+<td>Supoorts K-means clustering</td>
+</tr>
+<tr>
+<td>Dimensionality reduction</td>
+<td>singular value decomposition (SVD) and principal component analysis (PCA)</td>
+</tr>
+<tr>
+<td>Feature extraction and transformation</td>
+<td>common feature transformations</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Alternating Least Squares</strong></p>
+<ul>
+<li>ALS approximates a sparse user item rating matrix of dimension K as the product of two dense matrices (user [U<em>K] and item [I</em>K] factor [latent] matrices).</li>
+<li>ALS tries to learn the hidden features of each user and item</li>
+<li>The algorithm alternatively fixes one factor matrix and solves for the other until it converges.</li>
+</ul>
+<p><a href="SparkNotes.pdf">Download the PDF version</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/03/Spark-Training-introduction/" rel="bookmark">Spark Training [introduction]</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2018/03/Collaborative-Filtering-for-Implicit-Feedback-on-Browsing-Hits-Data/" rel="bookmark">Collaborative Filtering for Implicit Feedback on Browsing Hits Data</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/04/NYC-CitiBike-3-More-Data-Exploration/" rel="bookmark">NYC CitiBike [3] - More Data Exploration</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/04/NYC-CitiBike-4-Model-Framework/" rel="bookmark">NYC CitiBike [4] - Model Framework</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2015/05/Geocoding-with-R-Python/" rel="bookmark">Geocoding with R/Python</a></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/data-science/" rel="tag"># data science</a>
+              <a href="/tags/spark/" rel="tag"># spark</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/04/Wisely-remove-exited-stopped-container/" rel="prev" title="Wisely remove exited/stopped container">
+                  <i class="fa fa-chevron-left"></i> Wisely remove exited/stopped container
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/07/Data-Science-is-about-innovation/" rel="next" title="Data Science is about innovation">
+                  Data Science is about innovation <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yi Jin</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+<script>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  const url = element.dataset.target;
+  const pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  const pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  const fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+  <script src="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.css">
+
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://starrynight88.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://jinyi.me/2016/08/Master-Apache-Spark/";
+    this.page.identifier = "2016/08/Master-Apache-Spark/";
+    this.page.title = "Master Apache Spark";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://starrynight88.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
