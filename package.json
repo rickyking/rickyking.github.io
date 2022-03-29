@@ -7,7 +7,7 @@
   "scripts": {
     "clean-dist": "rm -rf dist && mkdir dist",
     "start": "parcel",
-    "build": "parcel build && cp -r src/.nojekyll dist && cp -r src/CNAME dist",
+    "build": "parcel build && cp -r src/.nojekyll dist && cp -r src/CNAME dist && cp -r src/favicon.* dist",
     "copy-assets": "cp -r src/assets/* dist",
     "copy-files": "cp -r src/.nojekyll dist"
   },
