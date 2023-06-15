@@ -6,7 +6,9 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build && cp -r src/.nojekyll dist && cp -r src/CNAME dist && cp -r src/assets/favicon.* dist",
+    "copy-assets": "cp -r src/assets/* dist",
+    "copy-files": "cp -r src/.nojekyll dist"
   },
   "repository": {
     "type": "git",
